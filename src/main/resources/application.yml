@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/diba_read
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+
+esdb:
+  connectionstring: esdb://192.168.18.194:2113?tls=false
