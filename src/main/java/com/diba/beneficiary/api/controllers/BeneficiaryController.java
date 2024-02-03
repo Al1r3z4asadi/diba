@@ -17,17 +17,19 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("api/v1/beneficiary")
 public class BeneficiaryController {
     private final ICommandDispatcher _dispatcher ;
-    public BeneficiaryController(ICommandDispatcher dispathcer){
-        _dispatcher = dispathcer ;
+    public BeneficiaryController(ICommandDispatcher dispatcher){
+        _dispatcher = dispatcher ;
     }
 
 
     @PostMapping("")
     public ResponseEntity<Envelope> addProduct(@RequestBody BeneficiaryRequests.CreateOne addRequest){
 
-        
+        var command = new BeneficiaryCommands.createOne(addRequest.businessCode() ,
+                addRequest.beneficiaryNameEn() , addRequest.beneficiaryName() ,
+                addRequest.beneficiaryRoles() , addRequest.beneficiaryType()
+        ) ;
 
-        var command = new BeneficiaryCommands.createOne() ;
         var result = _dispatcher.dispatch(command);
         return ResponseEntity.ok(
                 Envelope.builder().timeStamp(now())
