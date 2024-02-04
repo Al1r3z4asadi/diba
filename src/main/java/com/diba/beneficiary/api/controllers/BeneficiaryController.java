@@ -2,6 +2,7 @@ package com.diba.beneficiary.api.controllers;
 
 import com.diba.beneficiary.api.models.response.Envelope;
 import com.diba.beneficiary.core.command.ICommandDispatcher;
+import com.diba.beneficiary.core.utils.ServiceResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,21 +24,30 @@ public class BeneficiaryController {
 
 
     @PostMapping("")
-    public ResponseEntity<Envelope> addProduct(@RequestBody BeneficiaryRequests.CreateOne addRequest){
+    public ResponseEntity<Envelope> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest){
 
-        var command = new BeneficiaryCommands.createOne(addRequest.businessCode() ,
+        BeneficiaryCommands command = new BeneficiaryCommands.createOne(addRequest.businessCode() ,
                 addRequest.beneficiaryNameEn() , addRequest.beneficiaryName() ,
                 addRequest.beneficiaryRoles() , addRequest.beneficiaryType()
         ) ;
 
-        var result = _dispatcher.dispatch(command);
+         _dispatcher.dispatch(command);
         return ResponseEntity.ok(
                 Envelope.builder().timeStamp(now())
-                        .message((String) (result.isSuccess() ? result.getValue().get():result.getError().get()))
-                        .status(result.isSuccess() ? OK : BAD_REQUEST)
-                        .statusCode(result.isSuccess() ? OK.value() : BAD_REQUEST.value())
                         .build()
         );
     }
+    @PostMapping("/update")
+    public ResponseEntity<Envelope> updateBeneficiary(@RequestBody BeneficiaryRequests.updateOne addRequest){
+
+        var command = new BeneficiaryCommands.updateOne(addRequest.businessCode()) ;
+
+        _dispatcher.dispatch(command);
+        return ResponseEntity.ok(
+                Envelope.builder().timeStamp(now())
+                        .build()
+        );
+    }
+
 
 }

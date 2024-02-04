@@ -2,15 +2,16 @@ package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.command.ICommand;
 import com.diba.beneficiary.core.command.ICommandDispatcher;
-import com.diba.beneficiary.core.utils.ServiceResult;
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventStoreDBClient;
+import com.eventstore.dbclient.WriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ESAsyncDispatcher implements ICommandDispatcher {
+public class ESAsyncDispatcher implements ICommandDispatcher<WriteResult> {
     private final EventStoreDBClient eventStoreDBClient;
 
     @Autowired
@@ -18,14 +19,12 @@ public class ESAsyncDispatcher implements ICommandDispatcher {
         this.eventStoreDBClient = eventStoreDBClient;
     }
     @Override
-    public <T extends ICommand> ServiceResult dispatch(T command) {
+    public <T extends ICommand> CompletableFuture<WriteResult> dispatch(T command) {
         String commandStreamName = getCommandStreamName(command);
         EventData eventData = createEventData(command);
-
-        eventStoreDBClient.appendToStream(commandStreamName, eventData)
-                .join();
-        return ServiceResult.success(null);
+        return eventStoreDBClient.appendToStream(commandStreamName, eventData);
     }
+
     private <C extends ICommand> String getCommandStreamName(C command) {
         return "command-" + command.getClass().getSimpleName().toLowerCase();
     }

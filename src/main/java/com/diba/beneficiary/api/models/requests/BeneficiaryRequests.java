@@ -4,14 +4,18 @@ import java.util.List;
 
 public final class BeneficiaryRequests {
 
-    public record CreateOne(
+    public record createOne(
             String businessCode,
             String beneficiaryNameEn,
             String beneficiaryName ,
             List<Integer> beneficiaryRoles ,
             Integer beneficiaryType
     ){
+    }
 
 
+    public record updateOne(
+            String businessCode
+    ){
     }
 }

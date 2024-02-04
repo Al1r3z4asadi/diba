@@ -1,6 +1,7 @@
 package com.diba.beneficiary.core.command;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface BeneficiaryCommands extends ICommand{
 
@@ -11,5 +12,30 @@ public interface BeneficiaryCommands extends ICommand{
             List<Integer> beneficiaryRoles ,
             Integer beneficiaryType
 
-    )implements BeneficiaryCommands{}
+    )implements BeneficiaryCommands{
+        @Override
+        public String getCorrelationId() {
+            return  UUID.randomUUID().toString();
+        }
+
+        @Override
+        public String getCausationId() {
+            return "";
+        }
+    }
+
+    record updateOne(
+            String businessCode
+    ) implements BeneficiaryCommands{
+        @Override
+        public String getCorrelationId() {
+            return  UUID.randomUUID().toString();
+        }
+
+        @Override
+        public String getCausationId() {
+            return "";
+        }
+    }
+
 }

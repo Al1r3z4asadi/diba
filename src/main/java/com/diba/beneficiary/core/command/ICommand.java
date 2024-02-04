@@ -1,4 +1,6 @@
 package com.diba.beneficiary.core.command;
 
-public interface ICommand {
+import com.diba.beneficiary.core.utils.Message;
+
+public interface ICommand extends Message {
 }
