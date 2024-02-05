@@ -52,11 +52,10 @@ public class ESCommandSubscriber {
         try {
             retryTemplate.execute(context -> {
 
-                    subscriptionOptions.subscribeToAllOptions()
-                            .fromEnd();
-                subscription = _eventStoreClient.subscribeToAll(
-                        listener,
-                        subscriptionOptions.subscribeToAllOptions()
+                subscription = _eventStoreClient.subscribeToStream(
+                        "command-",
+                        listener ,
+                        this.subscriptionOptions.options()
                 ).get();
                 return null;
             });

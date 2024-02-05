@@ -26,7 +26,7 @@ public class ESAsyncDispatcher implements ICommandDispatcher<WriteResult> {
     }
 
     private <C extends ICommand> String getCommandStreamName(C command) {
-        return "command-" + command.getClass().getSimpleName().toLowerCase();
+        return "command-";
     }
 
     private <C extends ICommand> EventData createEventData(C command) {
