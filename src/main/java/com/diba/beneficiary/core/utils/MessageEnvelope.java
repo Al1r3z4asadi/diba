@@ -1,6 +1,6 @@
 package com.diba.beneficiary.core.utils;
 
-import com.diba.beneficiary.core.events.EventMetadata;
+import com.diba.beneficiary.core.events.eventbus.EventMetadata;
 import com.eventstore.dbclient.ResolvedEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
@@ -26,11 +26,10 @@ public record MessageEnvelope<Event extends Message>(
                         eventData.get(),
                         new EventMetadata(
                                 resolvedEvent.getEvent().getUserMetadata(),
-                                resolvedEvent.getEvent().getEventId().toString()
-                                , 3  ,2 , null
-//                                resolvedEvent.getEvent().getRevision(),
-//                                resolvedEvent.getEvent().getPosition().getCommitUnsigned(),
-//                                resolvedEvent.getEvent().getEventType()
+                                resolvedEvent.getEvent().getEventId().toString(),
+                                resolvedEvent.getEvent().getPosition().getCommitUnsigned(),
+                                resolvedEvent.getEvent().getEventType(),
+                                resolvedEvent.getEvent().getRevision()
                         )
                 )
         );

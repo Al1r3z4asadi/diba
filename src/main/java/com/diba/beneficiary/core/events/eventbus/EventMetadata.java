@@ -1,10 +1,11 @@
-package com.diba.beneficiary.core.events;
+package com.diba.beneficiary.core.events.eventbus;
 
 public record EventMetadata(
         byte[] userMetadata,
         String eventId,
         long streamPosition,
-        long logPosition,
-        String eventType
+        String eventType,
+
+        long logPosition
 ) {
 }
