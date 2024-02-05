@@ -2,6 +2,7 @@ package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.command.ICommand;
 import com.diba.beneficiary.core.command.ICommandDispatcher;
+import com.diba.beneficiary.core.utils.UserMetadata;
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventStoreDBClient;
 import com.eventstore.dbclient.WriteResult;
@@ -32,12 +33,16 @@ public class ESAsyncDispatcher implements ICommandDispatcher<WriteResult> {
     private <C extends ICommand> EventData createEventData(C command) {
         String correlationId = UUID.randomUUID().toString();
         //can add more metadata
+        UserMetadata userMetadata = new UserMetadata(
+                UUID.randomUUID().toString(),
+                null
+        );
         return EventData
                 .builderAsJson(
                         UUID.randomUUID(),
                         command.getClass().toString(),
                         command
-                ).metadataAsJson(correlationId)
+                ).metadataAsJson(userMetadata)
                 .build();
     }
 }

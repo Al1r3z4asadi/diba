@@ -1,9 +1,7 @@
 package com.diba.beneficiary.core.events;
 
-
 public record EventMetadata(
-        String correlationId,
-        String causationId ,
+        byte[] userMetadata,
         String eventId,
         long streamPosition,
         long logPosition,

@@ -25,7 +25,7 @@ public record MessageEnvelope<Event extends Message>(
                 new MessageEnvelope<>(
                         eventData.get(),
                         new EventMetadata(
-                                "s" , "d" ,
+                                resolvedEvent.getEvent().getUserMetadata(),
                                 resolvedEvent.getEvent().getEventId().toString()
                                 , 3  ,2 , null
 //                                resolvedEvent.getEvent().getRevision(),

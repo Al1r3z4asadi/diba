@@ -13,29 +13,11 @@ public interface BeneficiaryCommands extends ICommand{
             Integer beneficiaryType
 
     )implements BeneficiaryCommands{
-        @Override
-        public String getCorrelationId() {
-            return  UUID.randomUUID().toString();
-        }
-
-        @Override
-        public String getCausationId() {
-            return "";
-        }
     }
 
     record updateOne(
             String businessCode
     ) implements BeneficiaryCommands{
-        @Override
-        public String getCorrelationId() {
-            return  UUID.randomUUID().toString();
-        }
-
-        @Override
-        public String getCausationId() {
-            return "";
-        }
     }
 
 }
