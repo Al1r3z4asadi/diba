@@ -1,7 +1,7 @@
 package com.diba.beneficiary.infrastructure.projection;
 
 import com.diba.beneficiary.core.utils.MessageEnvelope;
-import com.diba.beneficiary.core.events.eventbus.IEvent;
+import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.repository.MongoRepository;

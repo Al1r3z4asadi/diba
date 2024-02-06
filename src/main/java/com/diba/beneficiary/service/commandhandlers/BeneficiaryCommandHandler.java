@@ -1,19 +1,16 @@
 package com.diba.beneficiary.service.commandhandlers;
 
-import com.diba.beneficiary.core.command.BeneficiaryCommands;
-import com.diba.beneficiary.core.command.Ihandlers.IBeneficiaryCommandHandler;
+import com.diba.beneficiary.core.messages.command.BeneficiaryCommands;
+import com.diba.beneficiary.core.messages.command.Ihandlers.ICoreCommandHandler;
 import com.diba.beneficiary.core.domainservice.BeneficiaryDomainService;
-import com.diba.beneficiary.core.utils.MessageEnvelope;
 import com.diba.beneficiary.core.utils.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class BeneficiaryCommandHandler implements IBeneficiaryCommandHandler {
+public class BeneficiaryCommandHandler implements ICoreCommandHandler {
 
     private final BeneficiaryDomainService _domainService ;
 
@@ -21,17 +18,11 @@ public class BeneficiaryCommandHandler implements IBeneficiaryCommandHandler {
         _domainService = domainService;
     }
 
-    @EventListener
-    @Async
-    @Override
-    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handleCreate(MessageEnvelope<BeneficiaryCommands.createOne> create ) {
-        return  _domainService.createNewBeneficiary(create.data()) ;
+    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(BeneficiaryCommands.createOne create ) {
+        return  _domainService.createNewBeneficiary(create) ;
     }
 
-    @EventListener
-    @Async
-    @Override
-    public CompletableFuture<ServiceResult> handleUpdate(MessageEnvelope<BeneficiaryCommands.updateOne> update) {
+    public CompletableFuture<ServiceResult> handle(BeneficiaryCommands.updateOne update) {
         return null;
     }
 

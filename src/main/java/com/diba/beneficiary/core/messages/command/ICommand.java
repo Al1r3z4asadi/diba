@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.command;
+package com.diba.beneficiary.core.messages.command;
 
 import com.diba.beneficiary.core.utils.Message;
 

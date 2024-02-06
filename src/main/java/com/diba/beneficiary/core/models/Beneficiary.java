@@ -1,6 +1,6 @@
 package com.diba.beneficiary.core.models;
 
-import com.diba.beneficiary.core.events.BeneficiaryEvents;
+import com.diba.beneficiary.core.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import java.util.List;

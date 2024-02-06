@@ -1,38 +1,49 @@
 package com.diba.beneficiary.service;
 
-import com.diba.beneficiary.core.command.ICommand;
-import com.diba.beneficiary.core.command.ICommandDispatcher;
+import com.diba.beneficiary.core.messages.command.ICommand;
+import com.diba.beneficiary.core.messages.IMessageDispatcher;
+import com.diba.beneficiary.core.utils.Message;
 import com.diba.beneficiary.core.utils.ServiceResult;
 import com.diba.beneficiary.core.utils.UserMetadata;
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventStoreDBClient;
-import com.eventstore.dbclient.WriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ESAsyncDispatcher<R> implements ICommandDispatcher<R> {
+@Scope("singleton")
+public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     private final EventStoreDBClient eventStoreDBClient;
+//    private final ICommandHandler _chandler ;
+//    private final IQueryHandler _qhandler;
 
     @Autowired
     public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient) {
         this.eventStoreDBClient = eventStoreDBClient;
+//        this._chandler = commandHandler ;
+//        this._qhandler = queryHandler ;
     }
     @Override
-    public <T extends ICommand> CompletableFuture<ServiceResult<R>> dispatch(T command) {
-        String commandStreamName = getCommandStreamName(command);
-        EventData eventData = createEventData(command);
-        eventStoreDBClient.appendToStream(commandStreamName, eventData);
-        return new CompletableFuture<>();
+    public <T extends Message> CompletableFuture<ServiceResult<R>> dispatch(T message) {
+        String commandStreamName = getCommandStreamName(message);
+        EventData eventData = createEventData(message);
+        var result = CompletableFuture.runAsync(()-> eventStoreDBClient.appendToStream(commandStreamName, eventData));
+//        return result.thenApply() ;
+        if(message instanceof ICommand)
+            return new CompletableFuture<>();
+        else
+//            if (message instanceof IQUERY)
+            return new CompletableFuture<>();
     }
 
-    private <C extends ICommand> String getCommandStreamName(C command) {
+    private <C extends Message> String getCommandStreamName(C message) {
         return "command-";
     }
 
-    private <C extends ICommand> EventData createEventData(C command) {
+    private <C extends Message> EventData createEventData(C message) {
         String correlationId = UUID.randomUUID().toString();
         //can add more metadata
         UserMetadata userMetadata = new UserMetadata(
@@ -42,8 +53,8 @@ public class ESAsyncDispatcher<R> implements ICommandDispatcher<R> {
         return EventData
                 .builderAsJson(
                         UUID.randomUUID(),
-                        command.getClass().toString(),
-                        command
+                        message.getClass().toString(),
+                        message
                 ).metadataAsJson(userMetadata)
                 .build();
     }

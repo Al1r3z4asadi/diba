@@ -1,19 +1,19 @@
-package com.diba.beneficiary.core.command.listener;
+package com.diba.beneficiary.temp.listener;
 
-import com.diba.beneficiary.core.command.ICommandBus;
+import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
+import com.diba.beneficiary.core.messages.events.eventbus.IEventBus;
 import com.diba.beneficiary.core.utils.Message;
 import com.diba.beneficiary.core.utils.MessageEnvelope;
 import com.diba.beneficiary.core.utils.MessageTypeMapper;
 import com.eventstore.dbclient.ResolvedEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 
-public record CommandListener(
+public record EventListener<event extends IEvent>(
         ApplicationEventPublisher applicationEventPublisher
-) implements ICommandBus {
+) implements IEventBus {
     @Override
-    public <command extends Message> void publish(MessageEnvelope<command> command) {
-        applicationEventPublisher.publishEvent(command);
+    public <event extends IEvent> void publish(MessageEnvelope<event> event) {
+        applicationEventPublisher.publishEvent(event);
     }
 
     public void handleEvent(ResolvedEvent resolvedEvent) {
@@ -24,7 +24,7 @@ public record CommandListener(
         if (streamEvent.isEmpty()) {
             return;
         }
-        this.publish((MessageEnvelope<?>) streamEvent.get());
+        this.publish((MessageEnvelope<event>) streamEvent.get());
     }
 
     private boolean isEventWithEmptyData(ResolvedEvent resolvedEvent) {

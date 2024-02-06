@@ -1,6 +1,6 @@
 package com.diba.beneficiary.core.domainservice;
 
-import com.diba.beneficiary.core.command.BeneficiaryCommands;
+import com.diba.beneficiary.core.messages.command.BeneficiaryCommands;
 import com.diba.beneficiary.core.models.Beneficiary;
 import com.diba.beneficiary.core.utils.ServiceResult;
 import com.diba.beneficiary.infrastructure.esdb.IEventStoreDBRepository;

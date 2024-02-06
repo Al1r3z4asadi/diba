@@ -1,7 +1,7 @@
 package com.diba.beneficiary.core.models;
 
 
-import com.diba.beneficiary.core.events.eventbus.IEvent;
+import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 
 import java.util.LinkedList;
 import java.util.Queue;

@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.events.eventbus;
+package com.diba.beneficiary.core.messages.events.eventbus;
 
 public record EventMetadata(
         byte[] userMetadata,

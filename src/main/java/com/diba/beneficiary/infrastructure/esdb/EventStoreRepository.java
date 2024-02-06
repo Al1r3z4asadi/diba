@@ -1,6 +1,6 @@
 package com.diba.beneficiary.infrastructure.esdb;
 
-import com.diba.beneficiary.core.events.eventbus.IEvent;
+import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.eventstore.dbclient.EventStoreDBClient;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 @Repository
 public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>, Event, Id>

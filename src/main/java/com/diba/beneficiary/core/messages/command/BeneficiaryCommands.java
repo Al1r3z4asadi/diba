@@ -1,7 +1,6 @@
-package com.diba.beneficiary.core.command;
+package com.diba.beneficiary.core.messages.command;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface BeneficiaryCommands extends ICommand{
 

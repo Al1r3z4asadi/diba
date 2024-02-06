@@ -1,6 +1,6 @@
-package com.diba.beneficiary.core.events;
+package com.diba.beneficiary.core.messages.events;
 
-import com.diba.beneficiary.core.events.eventbus.IEvent;
+import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 
 import java.util.List;
 
