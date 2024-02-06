@@ -2,6 +2,7 @@ package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.command.ICommand;
 import com.diba.beneficiary.core.command.ICommandDispatcher;
+import com.diba.beneficiary.core.utils.ServiceResult;
 import com.diba.beneficiary.core.utils.UserMetadata;
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventStoreDBClient;
@@ -12,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ESAsyncDispatcher implements ICommandDispatcher<WriteResult> {
+public class ESAsyncDispatcher<R> implements ICommandDispatcher<R> {
     private final EventStoreDBClient eventStoreDBClient;
 
     @Autowired
@@ -20,10 +21,11 @@ public class ESAsyncDispatcher implements ICommandDispatcher<WriteResult> {
         this.eventStoreDBClient = eventStoreDBClient;
     }
     @Override
-    public <T extends ICommand> CompletableFuture<WriteResult> dispatch(T command) {
+    public <T extends ICommand> CompletableFuture<ServiceResult<R>> dispatch(T command) {
         String commandStreamName = getCommandStreamName(command);
         EventData eventData = createEventData(command);
-        return eventStoreDBClient.appendToStream(commandStreamName, eventData);
+        eventStoreDBClient.appendToStream(commandStreamName, eventData);
+        return new CompletableFuture<>();
     }
 
     private <C extends ICommand> String getCommandStreamName(C command) {
