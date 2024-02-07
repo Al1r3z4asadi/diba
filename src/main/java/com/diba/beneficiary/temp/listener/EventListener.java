@@ -2,9 +2,8 @@ package com.diba.beneficiary.temp.listener;
 
 import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 import com.diba.beneficiary.core.messages.events.eventbus.IEventBus;
-import com.diba.beneficiary.core.utils.Message;
-import com.diba.beneficiary.core.utils.MessageEnvelope;
-import com.diba.beneficiary.core.utils.MessageTypeMapper;
+import com.diba.beneficiary.core.messages.utils.MessageEnvelope;
+import com.diba.beneficiary.core.messages.utils.MessageTypeMapper;
 import com.eventstore.dbclient.ResolvedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 

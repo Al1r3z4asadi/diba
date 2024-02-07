@@ -1,7 +1,6 @@
 package com.diba.beneficiary.core.messages.events.eventbus;
 
-import com.diba.beneficiary.core.utils.Message;
-import com.diba.beneficiary.core.utils.MessageEnvelope;
+import com.diba.beneficiary.core.messages.utils.MessageEnvelope;
 
 public interface IEventBus {
 

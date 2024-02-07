@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.utils;
+package com.diba.beneficiary.core.messages.utils;
 
 import com.diba.beneficiary.core.messages.events.eventbus.EventMetadata;
 import com.eventstore.dbclient.ResolvedEvent;

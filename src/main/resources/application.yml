@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://192.168.18.106:27017/diba_read
+      uri: mongodb://192.168.19.148:27017/diba_read
 
 logging:
   level:
@@ -9,4 +9,4 @@ logging:
 
 
 esdb:
-  connectionstring: esdb://192.168.18.106:2113?tls=false
+  connectionstring: esdb://192.168.19.148:2113?tls=false

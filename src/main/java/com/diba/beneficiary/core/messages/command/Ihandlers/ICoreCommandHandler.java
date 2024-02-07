@@ -1,10 +1,9 @@
 package com.diba.beneficiary.core.messages.command.Ihandlers;
 
-import com.diba.beneficiary.core.messages.command.BeneficiaryCommands;
-import com.diba.beneficiary.core.utils.ServiceResult;
-import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
+import com.diba.beneficiary.core.messages.command.ICommand;
 
-import java.util.concurrent.CompletableFuture;
+public interface ICoreCommandHandler<command extends ICommand>{
 
-public interface ICoreCommandHandler {
+    boolean canHandle(command commandType);
+
 }

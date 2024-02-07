@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.utils;
+package com.diba.beneficiary.core.messages.utils;
 
 import java.util.UUID;
 
