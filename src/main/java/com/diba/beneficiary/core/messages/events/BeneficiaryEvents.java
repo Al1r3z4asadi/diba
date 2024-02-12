@@ -14,4 +14,14 @@ public interface BeneficiaryEvents extends IEvent {
             Integer beneficiaryType
     )implements BeneficiaryEvents{
     }
+
+    record BeneficiaryWasUpdate(
+            String businessCode,
+            String beneficiaryNameEn,
+            String beneficiaryName ,
+            List<Integer> beneficiaryRoles ,
+            Integer beneficiaryType
+    )implements BeneficiaryEvents{
+    }
+
 }

@@ -16,11 +16,9 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
 
     @Autowired
     private  BeneficiaryDomainService _domainService ;
-
-
     public BeneficiaryCommandHandler(){
-
     }
+
     public BeneficiaryCommandHandler(BeneficiaryDomainService domainService) {
         _domainService = domainService;
     }

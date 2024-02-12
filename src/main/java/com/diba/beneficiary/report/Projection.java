@@ -1,14 +1,15 @@
-package com.diba.beneficiary.infrastructure.projection;
+package com.diba.beneficiary.report;
 
 import com.diba.beneficiary.core.messages.utils.MessageEnvelope;
 import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
 import java.util.function.Supplier;
 
 public abstract class Projection<View, Id> {
-    private final MongoRepository<View, Id> repository;
+    private final ReactiveMongoRepository<View, Id> repository;
     private final Logger logger = LoggerFactory.getLogger(Projection.class);
 
     protected <Event extends IEvent> void add(MessageEnvelope<Event> eventEnvelope, Supplier<View> handle) {
@@ -16,8 +17,10 @@ public abstract class Projection<View, Id> {
         repository.save(result);
     }
 
-    protected Projection(MongoRepository<View, Id> repository) {
+    protected Projection(ReactiveMongoRepository<View, Id> repository) {
         this.repository = repository;
     }
+
+
 
 }

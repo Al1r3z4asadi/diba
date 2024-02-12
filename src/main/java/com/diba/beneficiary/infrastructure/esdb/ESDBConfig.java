@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
-public class config {
+public class ESDBConfig {
     @Bean
     @Scope("singleton")
     EventStoreDBClient eventStoreDBClient(@Value("${esdb.connectionstring}") String connectionString) {

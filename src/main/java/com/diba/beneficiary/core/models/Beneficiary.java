@@ -6,6 +6,7 @@ import com.diba.beneficiary.core.exception.ErrorCodes;
 import java.util.List;
 import java.util.UUID;
 
+//rich domain model vs anemic domain model
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     private String businessCode;

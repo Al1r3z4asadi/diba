@@ -1,12 +1,25 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://192.168.19.148:27017/diba_read
+      projection:
+        database: projection
+      local:
+          database: beneficiary
+      uri: mongodb://192.168.19.191:27017/diba
+
+
+spring.autoconfigure.exclude: |
+  org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,
+  org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration,
+  org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration,
+  org.springframework.boot.autoconfigure.data.mongo.MongoReactiveRepositoriesAutoConfiguration,
+  org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
 
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 
+
 esdb:
-  connectionstring: esdb://192.168.19.148:2113?tls=false
+  connectionstring: esdb://192.168.19.191:2113?tls=false

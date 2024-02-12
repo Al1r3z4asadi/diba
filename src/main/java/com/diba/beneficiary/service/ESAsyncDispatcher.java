@@ -32,7 +32,6 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
         String commandStreamName = getCommandStreamName(message);
         EventData eventData = createEventData(message);
         var result = CompletableFuture.runAsync(()-> eventStoreDBClient.appendToStream(commandStreamName, eventData));
-//        return  ;
         if(message instanceof ICommand)
             return result.thenCompose(f  -> this._chandler.handle((ICommand) message));
         else
@@ -47,8 +46,8 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     private <C extends Message> EventData createEventData(C message) {
         String correlationId = UUID.randomUUID().toString();
         UserMetadata userMetadata = new UserMetadata(
-                UUID.randomUUID().toString(),
-                null
+                correlationId,
+                ""
         );
         return EventData
                 .builderAsJson(
