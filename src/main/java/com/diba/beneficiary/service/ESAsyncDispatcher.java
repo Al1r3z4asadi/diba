@@ -1,11 +1,11 @@
 package com.diba.beneficiary.service;
 
-import com.diba.beneficiary.core.messages.ICommandHandler;
-import com.diba.beneficiary.core.messages.command.ICommand;
-import com.diba.beneficiary.core.messages.IMessageDispatcher;
-import com.diba.beneficiary.core.messages.utils.Message;
-import com.diba.beneficiary.core.utils.ServiceResult;
-import com.diba.beneficiary.core.messages.utils.UserMetadata;
+import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;
+import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.core.service.IMessageDispatcher;
+import com.diba.beneficiary.shared.messages.utils.Message;
+import com.diba.beneficiary.shared.ServiceResult;
+import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventStoreDBClient;
 import org.springframework.beans.factory.annotation.Autowired;

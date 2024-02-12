@@ -2,11 +2,11 @@ package com.diba.beneficiary;
 
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryModel;
+import com.diba.beneficiary.report.repositories.BeneficiaryReport;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.util.UUID;
 
@@ -19,7 +19,8 @@ public class BeneficiaryApplication {
 
 
     @Bean
-    CommandLineRunner run(BeneficiaryLocalRepository repo){
+    CommandLineRunner run(BeneficiaryLocalRepository repo ,
+                          BeneficiaryReport report){
         return args -> {
 
             BeneficiaryModel beneficiary = new BeneficiaryModel();
@@ -27,6 +28,8 @@ public class BeneficiaryApplication {
             beneficiary.setBusinessCode("BC");
 
             repo.save(beneficiary).block();
+
+            report.save(beneficiary).block();
 
             System.out.println("salam");
 

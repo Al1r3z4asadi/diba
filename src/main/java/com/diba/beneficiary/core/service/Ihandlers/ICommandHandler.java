@@ -1,7 +1,7 @@
-package com.diba.beneficiary.core.messages;
+package com.diba.beneficiary.core.service.Ihandlers;
 
-import com.diba.beneficiary.core.messages.command.ICommand;
-import com.diba.beneficiary.core.utils.ServiceResult;
+import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.shared.ServiceResult;
 import java.util.concurrent.CompletableFuture;
 
 public interface ICommandHandler<R> {

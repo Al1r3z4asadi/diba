@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.messages.utils;
+package com.diba.beneficiary.shared.messages.utils;
 
 import com.eventstore.dbclient.EventData;
 import com.eventstore.dbclient.EventDataBuilder;

@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.messages.command;
+package com.diba.beneficiary.shared.messages.command;
 
 import java.util.List;
 

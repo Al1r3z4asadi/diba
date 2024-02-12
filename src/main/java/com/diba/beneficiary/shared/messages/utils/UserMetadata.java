@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.messages.utils;
+package com.diba.beneficiary.shared.messages.utils;
 
 public record UserMetadata(
         String correlationId,

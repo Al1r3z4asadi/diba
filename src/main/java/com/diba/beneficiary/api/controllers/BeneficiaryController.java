@@ -1,9 +1,9 @@
 package com.diba.beneficiary.api.controllers;
 
 import com.diba.beneficiary.api.models.response.Envelope;
-import com.diba.beneficiary.core.messages.IMessageDispatcher;
+import com.diba.beneficiary.core.service.IMessageDispatcher;
 import com.diba.beneficiary.core.http.ETag;
-import com.diba.beneficiary.core.utils.ServiceResult;
+import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
 import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
-import com.diba.beneficiary.core.messages.command.BeneficiaryCommands;
+import com.diba.beneficiary.shared.messages.command.BeneficiaryCommands;
 
 import java.util.Map;
 import java.util.UUID;

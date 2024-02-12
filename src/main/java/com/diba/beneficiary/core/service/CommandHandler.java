@@ -1,9 +1,9 @@
-package com.diba.beneficiary.core.messages;
+package com.diba.beneficiary.core.service;
 
-import com.diba.beneficiary.core.messages.command.BeneficiaryCommands;
-import com.diba.beneficiary.core.messages.command.ICommand;
-import com.diba.beneficiary.core.messages.command.Ihandlers.ICoreCommandHandler;
-import com.diba.beneficiary.core.utils.ServiceResult;
+import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;
+import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
+import com.diba.beneficiary.shared.ServiceResult;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Scope("singleton")
-public class CommandHandler<R> implements ICommandHandler{
+public class CommandHandler<R> implements ICommandHandler {
 
     private Map<String, ICoreCommandHandler> handlers ;
 

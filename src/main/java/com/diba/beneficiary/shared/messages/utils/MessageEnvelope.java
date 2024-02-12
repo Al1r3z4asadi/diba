@@ -1,6 +1,6 @@
-package com.diba.beneficiary.core.messages.utils;
+package com.diba.beneficiary.shared.messages.utils;
 
-import com.diba.beneficiary.core.messages.events.eventbus.EventMetadata;
+import com.diba.beneficiary.shared.messages.events.EventMetadata;
 import com.eventstore.dbclient.ResolvedEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;

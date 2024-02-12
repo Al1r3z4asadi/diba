@@ -1,7 +1,7 @@
 package com.diba.beneficiary.report;
 
-import com.diba.beneficiary.core.messages.utils.MessageEnvelope;
-import com.diba.beneficiary.core.messages.events.eventbus.IEvent;
+import com.diba.beneficiary.shared.messages.utils.MessageEnvelope;
+import com.diba.beneficiary.shared.messages.events.IEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

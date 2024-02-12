@@ -1,8 +1,8 @@
-package com.diba.beneficiary.core.messages;
+package com.diba.beneficiary.core.service;
 
 
-import com.diba.beneficiary.core.messages.utils.Message;
-import com.diba.beneficiary.core.utils.ServiceResult;
+import com.diba.beneficiary.shared.messages.utils.Message;
+import com.diba.beneficiary.shared.ServiceResult;
 
 import java.util.concurrent.CompletableFuture;
 

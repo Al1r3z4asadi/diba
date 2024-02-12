@@ -5,7 +5,7 @@ spring:
         database: projection
       local:
           database: beneficiary
-      uri: mongodb://192.168.19.191:27017/diba
+      uri: mongodb://192.168.19.191:27017
 
 
 spring.autoconfigure.exclude: |

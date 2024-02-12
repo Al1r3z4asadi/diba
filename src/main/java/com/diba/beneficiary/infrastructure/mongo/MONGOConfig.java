@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 @EnableConfigurationProperties(MyMongoProperties.class)
 public class MONGOConfig {
 
-    protected static final String PROJECTION_MONGO_TEMPLATE = "projectionMongoTemplate";
-    protected static final String BENEFICIARY_MONGO_TEMPLATE = "beneficiaryMongoTemplate";
+    public static final String PROJECTION_MONGO_TEMPLATE = "projectionMongoTemplate";
+    public static final String BENEFICIARY_MONGO_TEMPLATE = "beneficiaryMongoTemplate";
 
     @Bean(name = {PROJECTION_MONGO_TEMPLATE})
     public ReactiveMongoTemplate projectionMongoTemplate(MongoClient mongoClient, MyMongoProperties mongoProperties) {

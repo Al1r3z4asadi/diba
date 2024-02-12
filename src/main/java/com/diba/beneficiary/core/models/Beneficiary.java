@@ -1,6 +1,6 @@
 package com.diba.beneficiary.core.models;
 
-import com.diba.beneficiary.core.messages.events.BeneficiaryEvents;
+import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import java.util.List;
@@ -36,5 +36,10 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                     ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getCode());
         }
 
+    }
+
+
+    public static String mapToStreamId(UUID id) {
+        return "Beneficiary-%s".formatted(id);
     }
 }
