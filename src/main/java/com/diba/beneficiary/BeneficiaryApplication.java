@@ -23,8 +23,8 @@ public class BeneficiaryApplication {
                           BeneficiaryReport report){
         return args -> {
 
-            BeneficiaryModel beneficiary = new BeneficiaryModel();
-            beneficiary.setId(UUID.randomUUID());
+            BeneficiaryModel beneficiary = new BeneficiaryModel("DD");
+            beneficiary.setId(UUID.randomUUID().toString());
             beneficiary.setBusinessCode("BC");
 
             repo.save(beneficiary).block();

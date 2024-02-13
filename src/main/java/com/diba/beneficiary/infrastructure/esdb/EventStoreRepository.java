@@ -22,17 +22,19 @@ import java.util.function.Consumer;
 public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>, Event, Id>
         implements IEventStoreDBRepository<Entity , Id> {
     private final EventStoreDBClient eventStore;
-    private final Class<Entity> entityType;
+    private Class<Entity> entityType;
 
     public EventStoreRepository(EventStoreDBClient eventStore)
     {
-        Type superClass = getClass().getGenericSuperclass();
-        ParameterizedType parameterizedType = (ParameterizedType) superClass;
 
-        this.entityType = (Class<Entity>) parameterizedType.getActualTypeArguments()[0];
         this.eventStore = eventStore;
 
     }
+
+//    Type superClass = getClass().getGenericSuperclass();
+//    ParameterizedType parameterizedType = (ParameterizedType) superClass;
+//
+//        this.entityType = (Class<Entity>) parameterizedType.getActualTypeArguments()[0];
 
     @Override
     public CompletableFuture<Entity> Find(UUID id) {
@@ -40,17 +42,17 @@ public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>,
     }
 
     @Override
-    public CompletableFuture<BigInteger> Add(AbstractAggregate aggregate) {
+    public CompletableFuture<BigInteger> Add(Entity aggregate) {
         return null;
     }
 
     @Override
-    public CompletableFuture<BigInteger> Update(AbstractAggregate aggregate, BigInteger expectedRevision) {
+    public CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision) {
         return null;
     }
 
     @Override
-    public CompletableFuture<BigInteger> Delete(AbstractAggregate aggregate, BigInteger expectedRevision) {
+    public CompletableFuture<BigInteger> Delete(Entity aggregate, BigInteger expectedRevision) {
         return null;
     }
 

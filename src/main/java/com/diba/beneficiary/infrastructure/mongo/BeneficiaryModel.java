@@ -9,8 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Beneficiaries")
 public class BeneficiaryModel extends BaseModel {
 
-    @Id
-    private String id;
+    public BeneficiaryModel(String code){
+        this.businessCode = code ;
+    }
+
+    public BeneficiaryModel(){
+
+    }
+
+
     @Indexed(unique = true)
     @Size(max = 2)
     private String businessCode;

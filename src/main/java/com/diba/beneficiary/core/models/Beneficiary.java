@@ -15,17 +15,17 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private List<Integer> beneficiaryRoles;
     private Integer beneficiaryType;
 
-    public static Beneficiary create(String businessCode , String beneficiaryNameEn ,
+    public static Beneficiary create(UUID id ,String businessCode , String beneficiaryNameEn ,
                                      String beneficiaryName , List<Integer> beneficiaryRoles ,
                                      Integer type){
-        return new Beneficiary(businessCode , beneficiaryNameEn ,
+        return new Beneficiary(id , businessCode , beneficiaryNameEn ,
                                 beneficiaryName , beneficiaryRoles,type);
     }
 
-    private Beneficiary(String businessCode , String beneficiaryNameEn ,
+    private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
                         String beneficiaryName , List<Integer> beneficiaryRoles ,
                         Integer type){
-        enqueue(new BeneficiaryEvents.BeneficiaryWasCreated(businessCode,
+        enqueue(new BeneficiaryEvents.BeneficiaryWasCreated(id , businessCode,
                 beneficiaryNameEn , beneficiaryName , beneficiaryRoles , type));
     }
 
