@@ -23,13 +23,13 @@ public class BeneficiaryApplication {
                           BeneficiaryReport report){
         return args -> {
 
-            BeneficiaryModel beneficiary = new BeneficiaryModel("DD");
-            beneficiary.setId(UUID.randomUUID().toString());
-            beneficiary.setBusinessCode("BC");
-
-            repo.save(beneficiary).block();
-
-            report.save(beneficiary).block();
+//            BeneficiaryModel beneficiary = new BeneficiaryModel("DD");
+//            beneficiary.setId(UUID.randomUUID().toString());
+//            beneficiary.setBusinessCode("BC");
+//
+//            repo.save(beneficiary).block();
+//
+//            report.save(beneficiary).block();
 
             System.out.println("salam");
 

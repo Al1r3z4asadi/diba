@@ -31,9 +31,9 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     public <T extends Message> CompletableFuture<ServiceResult<R>> dispatch(T message) {
         String commandStreamName = getCommandStreamName(message);
         EventData eventData = createEventData(message);
-        var result = CompletableFuture.supplyAsync(()-> eventStoreDBClient.appendToStream(commandStreamName, eventData)).join();
+        CompletableFuture.supplyAsync(()-> eventStoreDBClient.appendToStream(commandStreamName, eventData));
         if(message instanceof ICommand)
-            return result.thenCompose(f  -> this._chandler.handle((ICommand) message));
+            return  this._chandler.handle((ICommand) message) ;
         else
 //            if (message instanceof IQUERY)
             return new CompletableFuture<>();
