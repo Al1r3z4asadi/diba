@@ -5,7 +5,7 @@ spring:
         database: projection
       local:
           database: beneficiary
-      uri: mongodb://192.168.19.191:27017
+      uri: mongodb://192.168.19.175:27017
 
 
 spring.autoconfigure.exclude: |
@@ -22,4 +22,4 @@ logging:
 
 
 esdb:
-  connectionstring: esdb://192.168.19.191:2113?tls=false
+  connectionstring: esdb://192.168.19.175:2113?tls=false

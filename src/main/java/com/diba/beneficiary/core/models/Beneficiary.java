@@ -15,6 +15,10 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private List<Integer> beneficiaryRoles;
     private Integer beneficiaryType;
 
+    public Beneficiary() {
+
+    }
+
     public static Beneficiary create(UUID id ,String businessCode , String beneficiaryNameEn ,
                                      String beneficiaryName , List<Integer> beneficiaryRoles ,
                                      Integer type){
@@ -38,6 +42,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     }
 
+    public Beneficiary empty(){
+        return new Beneficiary();
+    }
 
     public static String mapToStreamId(UUID id) {
         return "Beneficiary-%s".formatted(id);

@@ -28,18 +28,26 @@ public class BeneficiaryDomainService {
     }
 
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(BeneficiaryCommands.createOne data) {
+        CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> future = new CompletableFuture<>();
+
         var bene =  _localRepo.findByBusinessCode(data.businessCode()).block();
         if(bene != null){
             throw new BeneficiaryException(ErrorCodes.BUSINESS_CODE_ALREADY_EXISTS.getMessage()
                     , ErrorCodes.BUSINESS_CODE_ALREADY_EXISTS.getCode());
         }
-        UUID id = UUID.fromString(_localRepo.insert(new BeneficiaryModel(data.businessCode())).block().getId());
-        Beneficiary dmodel = Beneficiary.create(id , data.businessCode() , data.beneficiaryNameEn()
-                                    , data.beneficiaryName()
-                                    ,data.beneficiaryRoles()
-                                    , data.beneficiaryType());
-        _esdbRepo.Add(dmodel);
-        return null ;
+
+        CompletableFuture.runAsync(() -> {
+            String sid = _localRepo.insert(new BeneficiaryModel(data.businessCode())).block().getId();
+            UUID id = UUID.fromString(sid);
+            Beneficiary dmodel = Beneficiary.create(id , data.businessCode() , data.beneficiaryNameEn()
+                    , data.beneficiaryName()
+                    ,data.beneficiaryRoles()
+                    , data.beneficiaryType());
+            var result = _esdbRepo.Add(dmodel);
+            future.complete(ServiceResult.success(new BeneficiaryCreatedDto(sid , result)));
+        });
+        
+        return future ;
 
     }
 }

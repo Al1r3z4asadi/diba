@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public interface IEventStoreDBRepository<Entity extends AbstractAggregate , Id> {
     CompletableFuture<Entity> Find(UUID id);
-    CompletableFuture<BigInteger> Add(Entity aggregate);
+    ETag Add(Entity aggregate);
     CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision);
     CompletableFuture<BigInteger> Delete(Entity aggregate, BigInteger expectedRevision );
     Optional<Entity> get(Id id) ;

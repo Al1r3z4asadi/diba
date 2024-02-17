@@ -1,14 +1,13 @@
 package com.diba.beneficiary.infrastructure.esdb;
 
 import com.diba.beneficiary.core.http.ETag;
+import com.diba.beneficiary.core.models.Beneficiary;
 import com.diba.beneficiary.shared.messages.events.IEvent;
 import com.diba.beneficiary.shared.messages.utils.MessageSerializer;
 import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.eventstore.dbclient.*;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.function.Consumer;
 public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>, Event, Id>
         implements IEventStoreDBRepository<Entity , Id> {
     private final EventStoreDBClient eventStore;
-    private Class<Entity> entityType;
+    private Class<Entity> type;
 
     public EventStoreRepository(EventStoreDBClient eventStore)
     {
@@ -31,20 +30,17 @@ public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>,
 
     }
 
-//    Type superClass = getClass().getGenericSuperclass();
-//    ParameterizedType parameterizedType = (ParameterizedType) superClass;
-//
-//        this.entityType = (Class<Entity>) parameterizedType.getActualTypeArguments()[0];
-
     @Override
     public CompletableFuture<Entity> Find(UUID id) {
         return null;
     }
 
     @Override
-    public CompletableFuture<BigInteger> Add(Entity aggregate) {
-        return null;
-    }
+    public ETag Add(Entity aggregate) {
+        return appendEvents(
+                aggregate,
+                AppendToStreamOptions.get().expectedRevision(ExpectedRevision.noStream())
+        );    }
 
     @Override
     public CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision) {
@@ -125,15 +121,20 @@ public class EventStoreRepository <Entity extends AbstractAggregate<IEvent, Id>,
     }
     private Entity createEntityInstance() {
         try {
-            return entityType.getDeclaredConstructor().newInstance();
+//            Entity instance = (Entity) type.getDeclaredMethod("empty").invoke(null);
+//            return instance;
+//            return  (Entity) new  Beneficiary() ;
+            return  null ;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create an instance of Entity", e);
+            e.printStackTrace();
+            return null;
         }
     }
     private String mapToStreamId(UUID id) {
-        return "%s-%s".formatted(this.entityType,id);
+        Entity e = createEntityInstance();
+        return "%s-%s".formatted("Bene",id);
     }
-    //This ugly hack is needed as ESDB Java client from v4 doesn't allow to access or serialise version in an elegant manner
+
     private ETag toETag(ExpectedRevision nextExpectedRevision) throws NoSuchFieldException, IllegalAccessException {
         var field = nextExpectedRevision.getClass().getDeclaredField("version");
         field.setAccessible(true);
