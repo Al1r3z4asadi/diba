@@ -28,6 +28,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     public static Beneficiary create(UUID id , String businessCode , String beneficiaryNameEn ,
                                      String beneficiaryName , List<Integer> beneficiaryRoles ,
                                      Integer type , UserMetadata metaData){
+        //TODO : Validation of creation of the model if needed
         return new Beneficiary(id , businessCode , beneficiaryNameEn ,
                                 beneficiaryName , beneficiaryRoles,type , metaData);
     }
