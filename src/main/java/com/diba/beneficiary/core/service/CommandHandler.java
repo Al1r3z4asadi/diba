@@ -1,6 +1,6 @@
 package com.diba.beneficiary.core.service;
 
-import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;
 import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
 import com.diba.beneficiary.shared.ServiceResult;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -26,7 +27,7 @@ public class CommandHandler<R> implements ICommandHandler {
     }
 
     @Override
-    public CompletableFuture<ServiceResult<?>> handle(ICommand command) {
+    public CompletableFuture<ServiceResult<?>> handle(Command command ) {
         for (ICoreCommandHandler<?> handler : handlers.values()) {
             try {
                 var clazz = handler.getClass() ;
@@ -35,6 +36,7 @@ public class CommandHandler<R> implements ICommandHandler {
                 return result;
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
+                throw new RuntimeException(e) ;
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             }

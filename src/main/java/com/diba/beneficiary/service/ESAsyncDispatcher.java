@@ -1,7 +1,7 @@
 package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;
-import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.IMessageDispatcher;
 import com.diba.beneficiary.shared.messages.utils.Message;
 import com.diba.beneficiary.shared.ServiceResult;
@@ -22,7 +22,7 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
 //    private final IQueryHandler _qhandler;
 
     @Autowired
-    public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient , ICommandHandler<ICommand> commandHandler) {
+    public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient , ICommandHandler<Command> commandHandler) {
         this.eventStoreDBClient = eventStoreDBClient;
         this._chandler = commandHandler ;
 //        this._qhandler = queryHandler ;
@@ -31,10 +31,14 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     public <T extends Message> CompletableFuture<ServiceResult<R>> dispatch(T message) {
         String commandStreamName = getCommandStreamName(message);
         EventData eventData = createEventData(message);
+
         CompletableFuture.supplyAsync(()-> eventStoreDBClient.appendToStream(commandStreamName, eventData)).join();
-        if(message instanceof ICommand)
-            return  this._chandler.handle((ICommand) message) ;
-        else
+        if(message instanceof Command) {
+            Command c = (Command)  message ;
+            c.setId(eventData.getEventId());
+            return this._chandler.handle(c);
+        }
+            else
 //            if (message instanceof IQUERY)
             return new CompletableFuture<>();
     }
@@ -44,14 +48,14 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     }
 
     private <C extends Message> EventData createEventData(C message) {
-        String correlationId = UUID.randomUUID().toString();
         UserMetadata userMetadata = new UserMetadata(
-                correlationId,
+                "",
                 ""
         );
+        UUID eventId = UUID.randomUUID();
         return EventData
                 .builderAsJson(
-                        UUID.randomUUID(),
+                        eventId,
                         message.getClass().toString(),
                         message
                 ).metadataAsJson(userMetadata)

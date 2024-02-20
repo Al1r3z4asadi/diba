@@ -1,7 +1,7 @@
 package com.diba.beneficiary.service.commandhandlers;
 
-import com.diba.beneficiary.shared.messages.command.BeneficiaryCommands;
-import com.diba.beneficiary.shared.messages.command.ICommand;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
+import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
 import com.diba.beneficiary.core.domainservice.BeneficiaryDomainService;
 import com.diba.beneficiary.shared.ServiceResult;
@@ -24,17 +24,17 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     }
 
     @Override
-    public boolean canHandle(ICommand commandType) {
+    public boolean canHandle(Command commandType) {
         //TODO : We will check what kind of commands this handler can handle
         return true;
     }
 
-    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(BeneficiaryCommands.createOne create ) {
+    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) {
         return  _domainService.createNewBeneficiary(create) ;
     }
 
-    public CompletableFuture<ServiceResult> handle(BeneficiaryCommands.updateOne update) {
-        return  null ;
-    }
+//    public CompletableFuture<ServiceResult> handle(BeneficiaryCommands.updateOne update) {
+//        return  null ;
+//    }
 
 }

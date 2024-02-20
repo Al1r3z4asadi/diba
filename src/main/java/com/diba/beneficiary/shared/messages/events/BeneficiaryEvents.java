@@ -1,5 +1,7 @@
 package com.diba.beneficiary.shared.messages.events;
 
+import com.diba.beneficiary.shared.messages.utils.UserMetadata;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +13,8 @@ public interface BeneficiaryEvents extends IEvent {
             String beneficiaryNameEn,
             String beneficiaryName ,
             List<Integer> beneficiaryRoles ,
-            Integer beneficiaryType
+            Integer beneficiaryType ,
+            UserMetadata metadata
     )implements BeneficiaryEvents{
     }
 
@@ -20,7 +23,8 @@ public interface BeneficiaryEvents extends IEvent {
             String beneficiaryNameEn,
             String beneficiaryName ,
             List<Integer> beneficiaryRoles ,
-            Integer beneficiaryType
+            Integer beneficiaryType ,
+            UserMetadata metadata
     )implements BeneficiaryEvents{
     }
 

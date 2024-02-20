@@ -6,12 +6,13 @@ import com.diba.beneficiary.core.http.ETag;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
 import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
-import com.diba.beneficiary.shared.messages.command.BeneficiaryCommands;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.BeneficiaryCommands;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class BeneficiaryController {
     @PostMapping("")
     public ResponseEntity<Envelope> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest){
 
-        BeneficiaryCommands command = new BeneficiaryCommands.createOne(addRequest.businessCode() ,
+        BeneficiaryCommands command = new CreateOne(addRequest.businessCode() ,
                 addRequest.beneficiaryNameEn() , addRequest.beneficiaryName() ,
                 addRequest.beneficiaryRoles() , addRequest.beneficiaryType());
 
@@ -47,16 +48,16 @@ public class BeneficiaryController {
                         .build()
         ) ;
     }
-    @PutMapping("/update")
-    public ResponseEntity<Envelope> updateBeneficiary(UUID id , @RequestBody BeneficiaryRequests.updateOne addRequest,
-                                                      @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch){
-        var command = new BeneficiaryCommands.updateOne(addRequest.businessCode()) ;
-        ServiceResult<BeneficiaryUpdatedDto> result = (ServiceResult<BeneficiaryUpdatedDto>) _dispatcher.dispatch(command).join();
-        return ResponseEntity.ok(
-                Envelope.builder().timeStamp(now())
-                        .build()
-        );
-    }
+//    @PutMapping("/update")
+//    public ResponseEntity<Envelope> updateBeneficiary(UUID id , @RequestBody BeneficiaryRequests.updateOne addRequest,
+//                                                      @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch){
+//        var command = new BeneficiaryCommands.updateOne(addRequest.businessCode()) ;
+//        ServiceResult<BeneficiaryUpdatedDto> result = (ServiceResult<BeneficiaryUpdatedDto>) _dispatcher.dispatch(command).join();
+//        return ResponseEntity.ok(
+//                Envelope.builder().timeStamp(now())
+//                        .build()
+//        );
+//    }
 
 
 }
