@@ -2,6 +2,7 @@ package com.diba.beneficiary.infrastructure.esdb.subscriptions;
 
 
 import com.diba.beneficiary.core.service.eventbus.EventBus;
+import com.diba.beneficiary.core.service.eventbus.IEventBus;
 import com.diba.beneficiary.shared.messages.events.IEvent;
 import com.diba.beneficiary.shared.messages.utils.MessageEnvelope;
 import com.diba.beneficiary.shared.messages.utils.MessageTypeMapper;
@@ -12,7 +13,7 @@ import org.springframework.retry.support.RetryTemplate;
 
 public class EventStoreDBSubscriptionToAll {
     private final EventStoreDBClient eventStoreClient;
-    private final EventBus eventBus;
+    private final IEventBus eventBus;
     private Subscription subscription;
     private boolean isRunning;
     private final Logger logger = LoggerFactory.getLogger(EventStoreDBSubscriptionToAll.class);
@@ -43,7 +44,7 @@ public class EventStoreDBSubscriptionToAll {
 
     public EventStoreDBSubscriptionToAll(
             EventStoreDBClient eventStoreClient,
-            EventBus eventBus
+            IEventBus eventBus
     ) {
         this.eventStoreClient = eventStoreClient;
         this.eventBus = eventBus;

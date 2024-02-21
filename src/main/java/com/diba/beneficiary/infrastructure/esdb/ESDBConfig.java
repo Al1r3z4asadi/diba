@@ -1,5 +1,7 @@
 package com.diba.beneficiary.infrastructure.esdb;
 
+import com.diba.beneficiary.core.service.eventbus.EventBus;
+import com.diba.beneficiary.core.service.eventbus.IEventBus;
 import com.eventstore.dbclient.EventStoreDBClient;
 import com.eventstore.dbclient.EventStoreDBClientSettings;
 import com.eventstore.dbclient.EventStoreDBConnectionString;
@@ -20,7 +22,13 @@ public class ESDBConfig {
             throw new RuntimeException(e);
         }
     }
-
+    @Bean
+    EventListener eventStoreDBSubscriptionBackgroundWorker(
+            EventStoreDBClient eventStore,
+            IEventBus eventBus
+    ) {
+        return new EventListener(eventStore, eventBus);
+    }
 
 
 
