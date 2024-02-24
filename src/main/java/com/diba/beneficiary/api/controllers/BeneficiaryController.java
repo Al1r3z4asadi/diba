@@ -27,7 +27,8 @@ public class BeneficiaryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Envelope> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest){
+    public ResponseEntity<Envelope> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest
+    ){
 
         BeneficiaryCommands command = new CreateOne(addRequest.businessCode() ,
                 addRequest.beneficiaryNameEn() , addRequest.beneficiaryName() ,
@@ -36,9 +37,9 @@ public class BeneficiaryController {
         ServiceResult<BeneficiaryCreatedDto> result = (ServiceResult<BeneficiaryCreatedDto>)_dispatcher.dispatch(command).join();
 
         BeneficiaryCreatedDto data = result.getValue().isPresent() ? result.getValue().get() : null;
-        return ResponseEntity.ok(
+            return ResponseEntity.ok().eTag(data.getEtag().value()).body(
                 Envelope.builder().timeStamp(now())
-                        .data(Map.of("data" ,data == null ? result.getError().get() : data))
+                        .data(Map.of("Id" ,data == null ? result.getError().get() : data.getBeneficiaryId()))
                         .status(result.isSuccess() ? OK : BAD_REQUEST)
                         .statusCode(result.isSuccess() ? OK.value() : BAD_REQUEST.value())
                         .build()

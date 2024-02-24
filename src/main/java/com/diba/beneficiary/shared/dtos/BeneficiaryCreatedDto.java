@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class BeneficiaryCreatedDto {
     public BeneficiaryCreatedDto(String beneficiaryId , ETag e){
         this.beneficiaryId = beneficiaryId  ;
-        etag = e ;
+        this.etag = e ;
     }
 
     private String beneficiaryId ;
