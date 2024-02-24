@@ -6,12 +6,14 @@ import com.diba.beneficiary.shared.messages.utils.MessageSerializer;
 import com.eventstore.dbclient.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
 
-
+@Component
 public final class ESDBCheckpointRepository implements ISubscriptionCheckpointRepository {
     private final EventStoreDBClient eventStore;
     private final Logger logger = LoggerFactory.getLogger(ESDBCheckpointRepository.class);
@@ -59,7 +61,7 @@ public final class ESDBCheckpointRepository implements ISubscriptionCheckpointRe
         try {
             eventStore.appendToStream(
                     streamName,
-                    AppendToStreamOptions.get().expectedRevision(ExpectedRevision.streamExists()),
+                    AppendToStreamOptions.get().expectedRevision(ExpectedRevision.any()),
                     event
             ).get();
         } catch (Throwable e) {

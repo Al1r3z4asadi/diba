@@ -11,8 +11,9 @@ import org.springframework.retry.support.RetryTemplate;
 
 public class EventStoreDBSubscriptionToAll {
     private final EventStoreDBClient eventStoreClient;
-    private final IEventBus eventBus;
     private final ISubscriptionCheckpointRepository checkpointRepository;
+    private final IEventBus eventBus;
+    private ESSubscriptionOption subscriptionOptions;
 
     private Subscription subscription;
     private boolean isRunning;
@@ -52,17 +53,28 @@ public class EventStoreDBSubscriptionToAll {
     }
 
     public void subscribeToAll() {
-        subscribeToAll("internal");
+        subscribeToAll(ESSubscriptionOption.getDefault());;
     }
 
-    void subscribeToAll(String s) {
+    void subscribeToAll(ESSubscriptionOption subscriptionOptions) {
 
+        this.subscriptionOptions = subscriptionOptions;
         try {
             retryTemplate.execute(context -> {
-                logger.info("Subscribing to all '%s'".formatted(s));
+                logger.info("Subscribing to all '%s'".formatted("salam"));
+                var checkpoint = checkpointRepository.load(subscriptionOptions.subscriptionId());
+                if (checkpoint.isPresent()) {
+                    subscriptionOptions.subscribeToAllOptions()
+                            .fromPosition(new Position(checkpoint.get(), checkpoint.get()));
+                } else {
+                    subscriptionOptions.subscribeToAllOptions()
+                            .fromStart();
+                }
 
+                logger.info("Subscribing to all '%s'".formatted(subscriptionOptions.subscriptionId()));
                 subscription = eventStoreClient.subscribeToAll(
-                        listener
+                        listener  ,
+                        subscriptionOptions.subscribeToAllOptions()
                 ).get();
                 return null;
             });
@@ -85,7 +97,7 @@ public class EventStoreDBSubscriptionToAll {
     }
 
     private void handleEvent(ResolvedEvent resolvedEvent) {
-        if (isEventWithEmptyData(resolvedEvent))
+        if (isEventWithEmptyData(resolvedEvent) || isCheckpointEvent(resolvedEvent))
             return;
 
         var eventClass = MessageTypeMapper.toClass(resolvedEvent.getEvent().getEventType());
@@ -97,12 +109,25 @@ public class EventStoreDBSubscriptionToAll {
         }
 
         eventBus.publish((MessageEnvelope<Message>) streamEvent.get());
+
+        checkpointRepository.store(
+                this.subscriptionOptions.subscriptionId(),
+                resolvedEvent.getEvent().getPosition().getCommitUnsigned()
+        );
     }
 
     private boolean isEventWithEmptyData(ResolvedEvent resolvedEvent) {
         if (resolvedEvent.getEvent().getEventData().length != 0) return false;
 
         logger.info("Event without data received");
+        return true;
+    }
+
+    private boolean isCheckpointEvent(ResolvedEvent resolvedEvent) {
+        if (!resolvedEvent.getEvent().getEventType().equals(MessageTypeMapper.toName(CheckpointStored.class)))
+            return false;
+
+        logger.info("Checkpoint event - ignoring");
         return true;
     }
 }
