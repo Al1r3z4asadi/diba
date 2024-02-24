@@ -14,7 +14,6 @@ import java.util.List;
 
 @Document(collection = "BeneficiaryInfo")
 @Data
-@AllArgsConstructor
 public class BeneficiaryInfo implements VersionedView {
 
     @Id
@@ -30,6 +29,20 @@ public class BeneficiaryInfo implements VersionedView {
     public BeneficiaryInfo() {
 
     }
+
+    public BeneficiaryInfo(String id , String businessCode , String beneficiaryName ,
+                            String beneficiaryNameEn , List<Integer> roles , Integer type ,
+                             long version , long lastProcessedPosition){
+        this.id = id ;
+        this.businessCode = businessCode ;
+        this.beneficiaryName = beneficiaryName ;
+        this.beneficiaryNameEn = beneficiaryNameEn;
+        this.beneficiaryRoles = roles ;
+        this.beneficiaryType = type ;
+        this.version = version ;
+        this.lastProcessedPosition = lastProcessedPosition ;
+    }
+
 
     @Override
     public long getLastProcessedPosition() {

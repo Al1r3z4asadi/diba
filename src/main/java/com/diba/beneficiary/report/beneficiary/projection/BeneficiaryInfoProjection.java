@@ -20,8 +20,12 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
     }
     @EventListener
     void handleBeneficiaryWasCreated(MessageEnvelope<BeneficiaryEvents.BeneficiaryWasCreated> create) {
+        var data = create.data() ;
         add(create, () ->
-                new BeneficiaryInfo()
+                new BeneficiaryInfo(data.id().toString() , data.businessCode(),
+                        data.beneficiaryName() , data.beneficiaryNameEn() ,
+                        data.beneficiaryRoles() , data.beneficiaryType(), create.metadata().streamPosition() ,
+                        create.metadata().logPosition())
         );
     }
 
