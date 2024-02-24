@@ -1,14 +1,11 @@
 package com.diba.beneficiary;
 
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
-import com.diba.beneficiary.infrastructure.mongo.BeneficiaryModel;
-import com.diba.beneficiary.report.repositories.BeneficiaryReport;
+import com.diba.beneficiary.report.beneficiary.repositories.BeneficiaryReport;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.UUID;
 
 @SpringBootApplication
 public class BeneficiaryApplication {

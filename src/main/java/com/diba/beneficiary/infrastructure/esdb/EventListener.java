@@ -1,6 +1,5 @@
 package com.diba.beneficiary.infrastructure.esdb;
 
-import com.diba.beneficiary.core.service.eventbus.EventBus;
 import com.diba.beneficiary.core.service.eventbus.IEventBus;
 import com.diba.beneficiary.infrastructure.esdb.subscriptions.EventStoreDBSubscriptionToAll;
 import com.diba.beneficiary.infrastructure.esdb.subscriptions.ISubscriptionCheckpointRepository;

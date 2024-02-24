@@ -8,7 +8,7 @@ import static com.diba.beneficiary.infrastructure.mongo.MONGOConfig.PROJECTION_M
 
 @Configuration
 @EnableReactiveMongoRepositories(
-        basePackages = {"com.diba.beneficiary.report.repositories"},
+        basePackages = {"com.diba.beneficiary.report.beneficiary"},
         reactiveMongoTemplateRef = PROJECTION_MONGO_TEMPLATE
 )
 

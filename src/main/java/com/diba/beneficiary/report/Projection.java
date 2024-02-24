@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import java.util.function.Supplier;
 
-public abstract class Projection<View, Id> {
+public abstract class Projection<View extends VersionedView, Id> {
     private final ReactiveMongoRepository<View, Id> repository;
     private final Logger logger = LoggerFactory.getLogger(Projection.class);
 
     protected <Event extends IEvent> void add(MessageEnvelope<Event> eventEnvelope, Supplier<View> handle) {
         var result = handle.get();
-        repository.save(result);
+        repository.save(result).block();
     }
 
     protected Projection(ReactiveMongoRepository<View, Id> repository) {

@@ -2,13 +2,9 @@ package com.diba.beneficiary.api.controllers;
 
 import com.diba.beneficiary.api.models.response.Envelope;
 import com.diba.beneficiary.core.service.IMessageDispatcher;
-import com.diba.beneficiary.core.http.ETag;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
-import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;

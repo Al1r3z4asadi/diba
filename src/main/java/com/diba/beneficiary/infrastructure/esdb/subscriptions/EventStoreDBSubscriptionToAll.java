@@ -1,7 +1,7 @@
 package com.diba.beneficiary.infrastructure.esdb.subscriptions;
 
 import com.diba.beneficiary.core.service.eventbus.IEventBus;
-import com.diba.beneficiary.shared.messages.events.IEvent;
+import com.diba.beneficiary.shared.messages.utils.Message;
 import com.diba.beneficiary.shared.messages.utils.MessageEnvelope;
 import com.diba.beneficiary.shared.messages.utils.MessageTypeMapper;
 import com.eventstore.dbclient.*;
@@ -29,7 +29,6 @@ public class EventStoreDBSubscriptionToAll {
             try {
                 handleEvent(event);
             } catch (Throwable e) {
-                logger.error("Error while handling event", e);
                 throw new RuntimeException(e);
             }
         }
@@ -60,7 +59,7 @@ public class EventStoreDBSubscriptionToAll {
 
         try {
             retryTemplate.execute(context -> {
-                logger.info("Subscribing to all '%s'".formatted());
+                logger.info("Subscribing to all '%s'".formatted(s));
 
                 subscription = eventStoreClient.subscribeToAll(
                         listener
@@ -97,7 +96,7 @@ public class EventStoreDBSubscriptionToAll {
             return;
         }
 
-        eventBus.publish((MessageEnvelope<IEvent>) streamEvent.get());
+        eventBus.publish((MessageEnvelope<Message>) streamEvent.get());
     }
 
     private boolean isEventWithEmptyData(ResolvedEvent resolvedEvent) {
