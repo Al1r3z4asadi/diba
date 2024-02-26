@@ -3,13 +3,12 @@ package com.diba.beneficiary.core.domainservice;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryModel;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.BeneficiaryCommands;
 import com.diba.beneficiary.core.models.Beneficiary.Beneficiary;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.infrastructure.esdb.IEventStoreDBRepository;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 import org.springframework.stereotype.Service;
 

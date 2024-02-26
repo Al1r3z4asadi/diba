@@ -1,8 +1,11 @@
 package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;
+import com.diba.beneficiary.core.service.Ihandlers.ICoreQueryHandler;
+import com.diba.beneficiary.core.service.Ihandlers.IQueryHandler;
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.IMessageDispatcher;
+import com.diba.beneficiary.shared.messages.command.Query;
 import com.diba.beneficiary.shared.messages.utils.Message;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
@@ -19,13 +22,14 @@ import java.util.concurrent.CompletableFuture;
 public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
     private final EventStoreDBClient eventStoreDBClient;
     private final ICommandHandler _chandler ;
-//    private final IQueryHandler _qhandler;
+    private final IQueryHandler _qhandler;
 
     @Autowired
-    public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient , ICommandHandler<Command> commandHandler) {
+    public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient , ICommandHandler<Command> commandHandler,
+                IQueryHandler queryHandler) {
         this.eventStoreDBClient = eventStoreDBClient;
         this._chandler = commandHandler ;
-//        this._qhandler = queryHandler ;
+        this._qhandler = queryHandler ;
     }
     @Override
     public <T extends Message> CompletableFuture<ServiceResult<R>> dispatch(T message) {
@@ -38,9 +42,9 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<R> {
             c.setId(eventData.getEventId());
             return this._chandler.handle(c);
         }
-            else
-//            if (message instanceof IQUERY)
-            return new CompletableFuture<>();
+        Query q = (Query) message ;
+        q.setId(eventData.getEventId());
+        return this._qhandler.handle(q);
     }
 
     private <C extends Message> String getCommandStreamName(C message) {

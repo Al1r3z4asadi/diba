@@ -2,9 +2,7 @@ package com.diba.beneficiary.report.beneficiary.views;
 
 import com.diba.beneficiary.report.VersionedView;
 import com.diba.beneficiary.shared.messages.events.EventMetadata;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.annotation.sql.DataSourceDefinition;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

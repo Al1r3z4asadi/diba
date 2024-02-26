@@ -1,6 +1,6 @@
 package com.diba.beneficiary.service.commandhandlers;
 
-import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
 import com.diba.beneficiary.core.domainservice.BeneficiaryDomainService;

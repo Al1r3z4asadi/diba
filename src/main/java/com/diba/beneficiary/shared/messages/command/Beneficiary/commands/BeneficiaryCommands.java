@@ -1,4 +1,4 @@
-package com.diba.beneficiary.shared.messages.command.Beneficiary;
+package com.diba.beneficiary.shared.messages.command.Beneficiary.commands;
 
 import com.diba.beneficiary.shared.messages.command.Command;
 

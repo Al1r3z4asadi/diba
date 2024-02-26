@@ -4,14 +4,13 @@ import com.diba.beneficiary.api.models.response.Envelope;
 import com.diba.beneficiary.core.service.IMessageDispatcher;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.CreateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.BeneficiaryCommands;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;

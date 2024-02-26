@@ -1,11 +1,12 @@
-package com.diba.beneficiary.shared.messages.command.Beneficiary;
+package com.diba.beneficiary.shared.messages.command.Beneficiary.commands;
 
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class CreateOne extends BeneficiaryCommands{
+public class CreateOne extends BeneficiaryCommands {
     private String businessCode ;
     private String beneficiaryNameEn ;
     private String beneficiaryName ;
