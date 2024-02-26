@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface ICoreQueryHandler<Q , R> {
+public interface ICoreQueryHandler<Q extends Query , R> {
     <Q extends Query> CompletableFuture<Flux<ServiceResult<R>>> handle(Q command);
 
 }

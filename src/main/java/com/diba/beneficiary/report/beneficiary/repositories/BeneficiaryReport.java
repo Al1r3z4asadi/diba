@@ -10,5 +10,5 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface BeneficiaryReport extends ReactiveMongoRepository<BeneficiaryInfo, String> {
-    Flux<BeneficiaryInfo> findAll(Example<BeneficiaryInfo> example, Pageable pageable);
+
 }
