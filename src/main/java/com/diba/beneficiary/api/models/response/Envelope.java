@@ -20,4 +20,11 @@ public class Envelope {
     private String message ;
     private String developerMessage ;
     private Map<?,?> data ;
+    public static Envelope createEnvelope(HttpStatus status, String message, Object data){
+        return Envelope.builder()
+                .status(status)
+                .message(message)
+                .data(data != null ? Map.of(message, data) : null)
+                .build();
+    }
 }

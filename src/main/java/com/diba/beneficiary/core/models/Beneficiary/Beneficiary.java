@@ -27,7 +27,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     public static Beneficiary create(UUID id , String businessCode , String beneficiaryNameEn ,
                                      String beneficiaryName , List<Integer> beneficiaryRoles ,
-                                     Integer type , UserMetadata metaData){
+                                     Integer type , UserMetadata metaData) throws Exception {
         //TODO : Validation of creation of the model if needed
         return new Beneficiary(id , businessCode , beneficiaryNameEn ,
                                 beneficiaryName , beneficiaryRoles,type , metaData);
@@ -35,7 +35,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
                         String beneficiaryName , List<Integer> beneficiaryRoles ,
-                        Integer type , UserMetadata metadata){
+                        Integer type , UserMetadata metadata) throws Exception {
         super.id = id ;
 
 
@@ -44,7 +44,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     }
 
     @Override
-    public void when(BeneficiaryEvents beneficiaryEvents ) {
+    public void when(BeneficiaryEvents beneficiaryEvents ) throws Exception {
         if (beneficiaryEvents == null) {
             throw new BeneficiaryException(ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getMessage(),
                     ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getCode());

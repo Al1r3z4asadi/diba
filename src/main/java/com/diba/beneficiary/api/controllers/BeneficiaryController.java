@@ -5,10 +5,12 @@ import com.diba.beneficiary.core.service.IMessageDispatcher;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -26,23 +28,25 @@ public class BeneficiaryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Envelope> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest
+    public Mono<ResponseEntity<Envelope>> addBeneficiary(@RequestBody BeneficiaryRequests.createOne addRequest
     ){
 
         BeneficiaryCommands command = new CreateOne(addRequest.businessCode() ,
                 addRequest.beneficiaryNameEn() , addRequest.beneficiaryName() ,
                 addRequest.beneficiaryRoles() , addRequest.beneficiaryType());
 
-        ServiceResult<BeneficiaryCreatedDto> result = (ServiceResult<BeneficiaryCreatedDto>)_dispatcher.dispatch(command).join();
+        var result  = (Mono<ServiceResult<BeneficiaryCreatedDto>>) _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                BeneficiaryCreatedDto beneficiaryCreatedDto = serviceResult.getValue().get();
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.OK, "Success", beneficiaryCreatedDto.getBeneficiaryId());
+                return ResponseEntity.ok(envelope);
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
 
-        BeneficiaryCreatedDto data = result.getValue().isPresent() ? result.getValue().get() : null;
-            return ResponseEntity.ok().eTag(data.getEtag().value()).body(
-                Envelope.builder().timeStamp(now())
-                        .data(Map.of("Id" ,data == null ? result.getError().get() : data.getBeneficiaryId()))
-                        .status(result.isSuccess() ? OK : BAD_REQUEST)
-                        .statusCode(result.isSuccess() ? OK.value() : BAD_REQUEST.value())
-                        .build()
-        ) ;
     }
 //    @PutMapping("/update")
 //    public ResponseEntity<Envelope> updateBeneficiary(UUID id , @RequestBody BeneficiaryRequests.updateOne addRequest,
@@ -54,6 +58,7 @@ public class BeneficiaryController {
 //                        .build()
 //        );
 //    }
+
 
 
 }

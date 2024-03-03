@@ -1,7 +1,7 @@
 package com.diba.beneficiary;
 
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
-import com.diba.beneficiary.report.beneficiary.repositories.BeneficiaryReport;
+import com.diba.beneficiary.report.beneficiary.projection.BeneficiaryProjectionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +17,7 @@ public class BeneficiaryApplication {
 
     @Bean
     CommandLineRunner run(BeneficiaryLocalRepository repo ,
-                          BeneficiaryReport report){
+                          BeneficiaryProjectionRepository report){
         return args -> {
 
 //            BeneficiaryModel beneficiary = new BeneficiaryModel("DD");

@@ -16,8 +16,8 @@ public interface IEventStoreDBRepository<Entity      , Id> {
     ETag Add(Entity aggregate);
     CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision);
     CompletableFuture<BigInteger> Delete(Entity aggregate, BigInteger expectedRevision );
-    Optional<Entity> get(Id id) ;
+    Optional<Entity> get(Id id) throws Exception;
     ETag appendEvents(Entity entity, AppendToStreamOptions appendOptions);
-    ETag getAndUpdate(Consumer<Entity> handle, Id id, long expectedRevision);
+    ETag getAndUpdate(Consumer<Entity> handle, Id id, long expectedRevision) throws Exception;
 
 }

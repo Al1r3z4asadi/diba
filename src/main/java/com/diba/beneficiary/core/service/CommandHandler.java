@@ -27,7 +27,7 @@ public class CommandHandler<R> implements ICommandHandler {
     }
 
     @Override
-    public CompletableFuture<ServiceResult<?>> handle(Command command ) {
+    public CompletableFuture<ServiceResult<?>> handle(Command command )  {
         for (ICoreCommandHandler<?> handler : handlers.values()) {
             try {
                 var clazz = handler.getClass() ;

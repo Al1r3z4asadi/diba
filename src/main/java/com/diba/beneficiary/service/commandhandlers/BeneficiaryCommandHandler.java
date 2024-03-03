@@ -1,5 +1,6 @@
 package com.diba.beneficiary.service.commandhandlers;
 
+import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
@@ -29,7 +30,7 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
         return true;
     }
 
-    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) {
+    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) throws BeneficiaryException {
         return  _domainService.createNewBeneficiary(create) ;
     }
 

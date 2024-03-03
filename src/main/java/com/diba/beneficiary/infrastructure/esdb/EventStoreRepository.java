@@ -57,9 +57,11 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
     }
 
 
-    public Optional<Entity> get(Id id) {
+    public Optional<Entity> get(Id id) throws Exception {
         String streamId = mapToStreamId.apply(id);
         var events = getEvents(streamId);
+        // TODO : SET<PRODUCTS> p
+        // TODO : REPOSITORY
         if (events.isEmpty())
             return Optional.empty();
         var current = this.getEmpty.get();
@@ -89,7 +91,7 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
     }
 
 
-    public ETag getAndUpdate(Consumer<Entity> handle, Id id, long expectedRevision) {
+    public ETag getAndUpdate(Consumer<Entity> handle, Id id, long expectedRevision) throws Exception {
         var streamId =  mapToStreamId.apply(id);
         var entity = get(id).orElseThrow(
                 () -> new RuntimeException("Stream with id %s was not found".formatted(streamId))

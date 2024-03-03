@@ -24,9 +24,10 @@ public class BeneficiaryDomainService {
     public BeneficiaryDomainService(IEventStoreDBRepository<Beneficiary , UUID> esdbRepo, BeneficiaryLocalRepository repo) {
         _esdbRepo = esdbRepo;
         _localRepo = repo;
+
     }
 
-    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(CreateOne data) {
+    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(CreateOne data) throws BeneficiaryException {
         CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> future = new CompletableFuture<>();
 
         var bene =  _localRepo.findByBusinessCode(data.getBusinessCode()).block();
@@ -38,10 +39,15 @@ public class BeneficiaryDomainService {
         CompletableFuture.runAsync(() -> {
             String sid = _localRepo.insert(new BeneficiaryModel(data.getBusinessCode())).block().getId();
             UUID id = UUID.fromString(sid);
-            Beneficiary dmodel = Beneficiary.create(id , data.getBusinessCode() , data.getBeneficiaryNameEn()
-                    , data.getBeneficiaryName()
-                    ,data.getBeneficiaryRoles()
-                    , data.getBeneficiaryType() , new UserMetadata(data.getId().toString() , ""));
+            Beneficiary dmodel = null;
+            try {
+                dmodel = Beneficiary.create(id , data.getBusinessCode() , data.getBeneficiaryNameEn()
+                        , data.getBeneficiaryName()
+                        ,data.getBeneficiaryRoles()
+                        , data.getBeneficiaryType() , new UserMetadata(data.getId().toString() , ""));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             var result = _esdbRepo.Add(dmodel);
             future.complete(ServiceResult.success(new BeneficiaryCreatedDto(sid , result)));
         });

@@ -1,6 +1,7 @@
 package com.diba.beneficiary.core.models;
 
 
+import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.shared.messages.events.IEvent;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 import org.apache.catalina.User;
@@ -28,9 +29,8 @@ public abstract class AbstractAggregate<EVENT extends  IEvent, Id> implements Ag
         return dequeuedEvents;
     }
 
-    public abstract void when(EVENT event);
-
-    protected void enqueue(EVENT event ) {
+    public abstract void when(EVENT event) throws  Exception;
+    protected void enqueue(EVENT event ) throws Exception {
 
         uncommittedEvents.add(event);
         when(event);

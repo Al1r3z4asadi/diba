@@ -2,8 +2,10 @@ package com.diba.beneficiary.core.service;
 
 import com.diba.beneficiary.core.service.Ihandlers.ICoreQueryHandler;
 import com.diba.beneficiary.core.service.Ihandlers.IQueryHandler;
-import com.diba.beneficiary.report.beneficiary.repositories.BeneficiaryReport;
-import com.diba.beneficiary.report.beneficiary.service.BeneficiaryReportHandler;
+import com.diba.beneficiary.report.ReportRepository;
+import com.diba.beneficiary.report.VersionedView;
+import com.diba.beneficiary.report.beneficiary.repositories.BeneficiaryReportRepository;
+import com.diba.beneficiary.report.beneficiary.service.GetAllBeneficiaryQueryHandler;
 import com.diba.beneficiary.shared.ServiceResult;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.queries.GetBeneficiaries;
 import com.diba.beneficiary.shared.messages.command.Query;
@@ -15,11 +17,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class QueryHandler implements IQueryHandler {
-    private final  BeneficiaryReport _reportRepository ;
+public class QueryHandler<T extends Query , R extends VersionedView> implements IQueryHandler {
+    private final ReportRepository _reportRepository ;
     private final Map<Class<?>, ICoreQueryHandler> handlers;
 
-    public QueryHandler(BeneficiaryReport _reportRepository, BeneficiaryReport reportRepository) {
+    public QueryHandler(ReportRepository reportRepository) {
         this._reportRepository = reportRepository;
         this.handlers = new HashMap<>();
         this.registerQueryHandlers(this._reportRepository) ;
@@ -27,14 +29,14 @@ public class QueryHandler implements IQueryHandler {
     }
 
     @Override
-    public CompletableFuture<Flux<ServiceResult>> handle(Query command) {
+    public Flux<R> handle(Query command) {
 
         ICoreQueryHandler handler = handlers.get(command.getClass());
         return handler.handle(command);
     }
 
-    private void registerQueryHandlers(BeneficiaryReport _reportRepository) {
-        handlers.put(GetBeneficiaries.class, new BeneficiaryReportHandler(_reportRepository));
+    private void registerQueryHandlers(ReportRepository _reportRepository) {
+        handlers.put(GetBeneficiaries.class, new GetAllBeneficiaryQueryHandler((BeneficiaryReportRepository) _reportRepository));
 
     }
 }

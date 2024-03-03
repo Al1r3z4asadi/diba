@@ -14,6 +14,9 @@ public interface BeneficiaryEvents extends IEvent {
             String beneficiaryName ,
             List<Integer> beneficiaryRoles ,
             Integer beneficiaryType ,
+
+            //TODO :
+            // set<Product> products ,
             UserMetadata metadata
     )implements BeneficiaryEvents{
     }
