@@ -1,6 +1,7 @@
 package com.diba.beneficiary.core.models.Beneficiary;
 
 import com.diba.beneficiary.core.models.AbstractAggregate;
+import com.diba.beneficiary.report.beneficiary.views.BeneficiaryInfo;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
@@ -32,6 +33,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         return new Beneficiary(id , businessCode , beneficiaryNameEn ,
                                 beneficiaryName , beneficiaryRoles,type , metaData);
     }
+
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
                         String beneficiaryName , List<Integer> beneficiaryRoles ,

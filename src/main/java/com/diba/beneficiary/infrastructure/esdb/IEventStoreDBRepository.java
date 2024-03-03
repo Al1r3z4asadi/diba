@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public interface IEventStoreDBRepository<Entity      , Id> {
+public interface IEventStoreDBRepository<Entity , Id> {
     CompletableFuture<Entity> Find(UUID id);
     ETag Add(Entity aggregate);
     CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision);
