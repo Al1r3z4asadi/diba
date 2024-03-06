@@ -15,7 +15,10 @@ public final class BeneficiaryRequests {
 
 
     public record updateOne(
-            String businessCode
-    ){
+            String businessCode,
+            String beneficiaryNameEn,
+            String beneficiaryName ,
+            List<Integer> beneficiaryRoles ,
+            Integer beneficiaryType    ){
     }
 }

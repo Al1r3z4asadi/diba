@@ -3,7 +3,9 @@ package com.diba.beneficiary.service.commandhandlers;
 import com.diba.beneficiary.core.domainservice.OrderDomainService;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.order.Order;
+import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICoreCommandHandler;
 import com.diba.beneficiary.core.domainservice.BeneficiaryDomainService;
@@ -37,8 +39,13 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     }
 
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) throws BeneficiaryException {
-        _orderDomainService.shit(create);
+//        _orderDomainService.shit(create);
         return  _domainService.createNewBeneficiary(create) ;
+    }
+    public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> handle(UpdateOne udpate ) throws BeneficiaryException {
+//        _orderDomainService.shit(create);
+//        return  _domainService.createNewBeneficiary() ;
+        return null ;
     }
 
 //    public CompletableFuture<ServiceResult> handle(BeneficiaryCommands.updateOne update) {

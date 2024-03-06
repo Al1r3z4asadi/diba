@@ -11,7 +11,7 @@ record ESSubscriptionOption(
 ) {
     static ESSubscriptionOption getDefault() {
         SubscriptionFilter filterOutSystemEvents = SubscriptionFilter.newBuilder()
-                .withEventTypeRegularExpression("^[^\\$].*")
+                    .withEventTypeRegularExpression("^[^\\$].*")
                 .build();
 
         SubscribeToAllOptions options = SubscribeToAllOptions.get()

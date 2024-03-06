@@ -30,15 +30,15 @@ public class BeneficiaryInfo implements VersionedView {
 
     public BeneficiaryInfo(String id , String businessCode , String beneficiaryName ,
                             String beneficiaryNameEn , List<Integer> roles , Integer type ,
-                             long version , long lastProcessedPosition){
+                              long lastProcessedPosition , long version){
         this.id = id ;
         this.businessCode = businessCode ;
         this.beneficiaryName = beneficiaryName ;
         this.beneficiaryNameEn = beneficiaryNameEn;
         this.beneficiaryRoles = roles ;
         this.beneficiaryType = type ;
-        this.version = version ;
         this.lastProcessedPosition = lastProcessedPosition ;
+        this.version = version ;
     }
 
 
@@ -49,8 +49,8 @@ public class BeneficiaryInfo implements VersionedView {
 
     @Override
     public void setMetadata(EventMetadata eventMetadata) {
-        this.version = eventMetadata.streamPosition();
-        this.lastProcessedPosition = eventMetadata.logPosition();
+        this.version = eventMetadata.logPosition();
+        this.lastProcessedPosition = eventMetadata.streamPosition();
     }
 
     public long getVersion() {

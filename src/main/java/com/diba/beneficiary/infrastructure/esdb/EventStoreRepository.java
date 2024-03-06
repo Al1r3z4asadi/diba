@@ -83,8 +83,8 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
                     appendOptions,
                     events.iterator()
             ).get();
-            return null ;
-//            return toETag(result.getNextExpectedRevision());
+//            return null ;
+            return toETag(result.getNextExpectedRevision());
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

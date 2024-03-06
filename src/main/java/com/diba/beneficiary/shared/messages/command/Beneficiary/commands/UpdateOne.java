@@ -1,25 +1,23 @@
 package com.diba.beneficiary.shared.messages.command.Beneficiary.commands;
 
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
 import lombok.Data;
 
 import java.util.List;
 
+
 @Data
-public class CreateOne extends BeneficiaryCommands {
+public class UpdateOne extends BeneficiaryCommands {
+    private String iid ;
     private String businessCode ;
     private String beneficiaryNameEn ;
     private String beneficiaryName ;
     private List<Integer> beneficiaryRoles ;
     private Integer beneficiaryType ;
 
-    public CreateOne(){
-
-    }
-
-    public CreateOne(String businessCode, String beneficiaryNameEn, String beneficiaryName,
+    public UpdateOne(String iid  , String businessCode, String beneficiaryNameEn, String beneficiaryName,
                      List<Integer> beneficiaryRoles, Integer type) {
         super();
+        this.iid = iid ;
         this.businessCode = businessCode ;
         this.beneficiaryName = beneficiaryName ;
         this.beneficiaryNameEn = beneficiaryNameEn ;
