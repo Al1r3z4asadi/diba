@@ -1,0 +1,34 @@
+package com.diba.beneficiary.events;
+
+import com.diba.beneficiary.utils.UserMetadata;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface BeneficiaryEvents extends IEvent {
+
+    record BeneficiaryWasCreated(
+            UUID id ,
+            String businessCode,
+            String beneficiaryNameEn,
+            String beneficiaryName ,
+            List<Integer> beneficiaryRoles ,
+            Integer beneficiaryType ,
+
+            //TODO :
+            // set<Product> products ,
+            UserMetadata metadata
+    )implements BeneficiaryEvents{
+    }
+
+    record BeneficiaryWasUpdate(
+            String businessCode,
+            String beneficiaryNameEn,
+            String beneficiaryName ,
+            List<Integer> beneficiaryRoles ,
+            Integer beneficiaryType ,
+            UserMetadata metadata
+    )implements BeneficiaryEvents{
+    }
+
+}
