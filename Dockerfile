@@ -9,6 +9,6 @@ RUN ./gradlew clean build  --
 
 EXPOSE 9092
 
-CMD ["java", "-jar", "build/libs/beneficiary.jar"]
+CMD ["java", "-jar", "build/libs/beneficiary-0.0.1-SNAPSHOT.jar"]
 
 

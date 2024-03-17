@@ -9,9 +9,7 @@ spring:
         database: projection
       local:
           database: beneficiary
-      host: mamad_mongo
-      port: 27017
-
+      uri: mongodb://mamad_mongo:27017
 
   autoconfigure:
     exclude: |
@@ -23,6 +21,5 @@ spring:
 
 
 esdb:
-  connectionstring: esdb-node
-  port: 2113
+  connectionstring: esdb://esdb-node:2113?tls=false
 
