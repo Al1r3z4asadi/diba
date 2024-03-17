@@ -9,7 +9,8 @@ spring:
         database: projection
       local:
           database: beneficiary
-      uri: mongodb
+      host: mamad_mongo
+      port: 27017
 
 
   autoconfigure:
@@ -23,4 +24,5 @@ spring:
 
 esdb:
   connectionstring: esdb-node
+  port: 2113
 
