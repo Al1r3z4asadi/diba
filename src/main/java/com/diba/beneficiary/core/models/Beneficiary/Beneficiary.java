@@ -1,11 +1,13 @@
 package com.diba.beneficiary.core.models.Beneficiary;
 
 import com.diba.beneficiary.core.models.AbstractAggregate;
-import com.diba.beneficiary.report.beneficiary.views.BeneficiaryInfo;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.shared.dtos.UpdateBeneficiaryDto;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
-import com.diba.beneficiary.shared.messages.events.EventMetadata;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.util.List;
@@ -17,8 +19,10 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private String businessCode;
     private String beneficiaryNameEn;
     private String beneficiaryName ;
-    private List<Integer> beneficiaryRoles;
-    private Integer beneficiaryType;
+    private List<BeneficiaryRole> beneficiaryRoles;
+    private BeneficiaryType beneficiaryType;
+    private BeneficiaryStatus status ;
+
 
 
 
@@ -27,21 +31,24 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     }
 
     public static Beneficiary create(UUID id , String businessCode , String beneficiaryNameEn ,
-                                     String beneficiaryName , List<Integer> beneficiaryRoles ,
-                                     Integer type , UserMetadata metaData) throws Exception {
+                                     String beneficiaryName , List<BeneficiaryRole> beneficiaryRoles ,
+                                     BeneficiaryType type , UserMetadata metaData) throws Exception {
         //TODO : Validation of creation of the model if needed
         return new Beneficiary(id , businessCode , beneficiaryNameEn ,
                                 beneficiaryName , beneficiaryRoles,type , metaData);
     }
 
+    public void update(UpdateBeneficiaryDto update){
+
+    }
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
-                        String beneficiaryName , List<Integer> beneficiaryRoles ,
-                        Integer type , UserMetadata metadata) throws Exception {
+                        String beneficiaryName , List<BeneficiaryRole> beneficiaryRoles ,
+                        BeneficiaryType type , UserMetadata metadata) throws Exception {
         super.id = id ;
 
 
-        enqueue(new BeneficiaryEvents.BeneficiaryWasCreated(id , businessCode,
+        enqueue(new BeneficiaryEvents.BeneficiaryCreated(id , businessCode,
                 beneficiaryNameEn , beneficiaryName , beneficiaryRoles , type , metadata));
     }
 
@@ -51,8 +58,8 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
             throw new BeneficiaryException(ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getMessage(),
                     ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getCode());
         }
-        else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryWasCreated){
-            apply((BeneficiaryEvents.BeneficiaryWasCreated) beneficiaryEvents);
+        else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryCreated){
+            apply((BeneficiaryEvents.BeneficiaryCreated) beneficiaryEvents);
         }
         else{
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
@@ -73,7 +80,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     // applies
 
-    private void apply(BeneficiaryEvents.BeneficiaryWasCreated created){
+    private void apply(BeneficiaryEvents.BeneficiaryCreated created){
 
         id = created.id() ;
         businessCode = created.businessCode();

@@ -21,15 +21,12 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
 
     @Autowired
     private  BeneficiaryDomainService _domainService ;
-    @Autowired
-    private OrderDomainService _orderDomainService ;
+
     public BeneficiaryCommandHandler(){
     }
 
-    public BeneficiaryCommandHandler(BeneficiaryDomainService domainService ,
-                                        OrderDomainService domain) {
+    public BeneficiaryCommandHandler(BeneficiaryDomainService domainService) {
         _domainService = domainService;
-        _orderDomainService = domain;
     }
 
     @Override
@@ -39,17 +36,12 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     }
 
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) throws BeneficiaryException {
-//        _orderDomainService.shit(create);
         return  _domainService.createNewBeneficiary(create) ;
     }
     public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> handle(UpdateOne udpate ) throws BeneficiaryException {
-//        _orderDomainService.shit(create);
-//        return  _domainService.createNewBeneficiary() ;
-        return null ;
+        return _domainService.updateBeneficiary(udpate);
     }
 
-//    public CompletableFuture<ServiceResult> handle(BeneficiaryCommands.updateOne update) {
-//        return  null ;
-//    }
+
 
 }

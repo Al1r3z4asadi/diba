@@ -1,5 +1,7 @@
 package com.diba.beneficiary.shared.messages.events;
 
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.util.List;
@@ -7,26 +9,24 @@ import java.util.UUID;
 
 public interface BeneficiaryEvents extends IEvent {
 
-    record BeneficiaryWasCreated(
+    record BeneficiaryCreated(
             UUID id ,
             String businessCode,
             String beneficiaryNameEn,
             String beneficiaryName ,
-            List<Integer> beneficiaryRoles ,
-            Integer beneficiaryType ,
-
-            //TODO :
-            // set<Product> products ,
+            List<BeneficiaryRole> beneficiaryRoles ,
+            BeneficiaryType beneficiaryType ,
             UserMetadata metadata
     )implements BeneficiaryEvents{
     }
 
-    record BeneficiaryWasUpdate(
+    record BeneficiaryUpdated(
+            UUID id ,
             String businessCode,
             String beneficiaryNameEn,
             String beneficiaryName ,
-            List<Integer> beneficiaryRoles ,
-            Integer beneficiaryType ,
+            List<BeneficiaryRole> beneficiaryRoles ,
+            BeneficiaryType beneficiaryType ,
             UserMetadata metadata
     )implements BeneficiaryEvents{
     }

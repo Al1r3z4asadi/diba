@@ -1,5 +1,13 @@
 package com.diba.beneficiary.shared.dtos;
 
-public class BeneficiaryUpdatedDto {
+import com.diba.beneficiary.core.http.ETag;
 
+public class BeneficiaryUpdatedDto {
+    public BeneficiaryUpdatedDto(String beneficiaryId , ETag e){
+        this.beneficiaryId = beneficiaryId  ;
+        this.etag = e ;
+    }
+
+    private String beneficiaryId ;
+    private ETag etag ;
 }

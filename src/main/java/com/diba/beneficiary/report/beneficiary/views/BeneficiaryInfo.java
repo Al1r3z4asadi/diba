@@ -1,5 +1,7 @@
 package com.diba.beneficiary.report.beneficiary.views;
 
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.report.VersionedView;
 import com.diba.beneficiary.shared.messages.events.EventMetadata;
 
@@ -19,8 +21,8 @@ public class BeneficiaryInfo implements VersionedView {
     private String businessCode;
     private String beneficiaryNameEn;
     private String beneficiaryName ;
-    private List<Integer> beneficiaryRoles;
-    private Integer beneficiaryType;
+    private List<BeneficiaryRole> beneficiaryRoles;
+    private BeneficiaryType beneficiaryType;
     private long version;
     private long lastProcessedPosition;
 
@@ -29,8 +31,8 @@ public class BeneficiaryInfo implements VersionedView {
     }
 
     public BeneficiaryInfo(String id , String businessCode , String beneficiaryName ,
-                            String beneficiaryNameEn , List<Integer> roles , Integer type ,
-                              long lastProcessedPosition , long version){
+                           String beneficiaryNameEn , List<BeneficiaryRole> roles , BeneficiaryType type ,
+                           long lastProcessedPosition , long version){
         this.id = id ;
         this.businessCode = businessCode ;
         this.beneficiaryName = beneficiaryName ;

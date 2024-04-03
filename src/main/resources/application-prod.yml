@@ -1,0 +1,7 @@
+ACTIVE_PROFILE: prod
+
+ESDB_IP: esdb-node
+ESDB_PORT: 2113
+
+MONGO_IP: mamad_mongo
+MONGO_PORT: 27017

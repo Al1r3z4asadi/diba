@@ -1,24 +1,28 @@
 package com.diba.beneficiary.shared.messages.command.Beneficiary.commands;
 
+import com.diba.beneficiary.core.exception.BeneficiaryException;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class CreateOne extends BeneficiaryCommands {
     private String businessCode ;
     private String beneficiaryNameEn ;
     private String beneficiaryName ;
-    private List<Integer> beneficiaryRoles ;
-    private Integer beneficiaryType ;
+    private List<BeneficiaryRole> beneficiaryRoles ;
+    private BeneficiaryType beneficiaryType ;
 
     public CreateOne(){
 
     }
 
     public CreateOne(String businessCode, String beneficiaryNameEn, String beneficiaryName,
-                     List<Integer> beneficiaryRoles, Integer type) {
+                     List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType type) {
         super();
         this.businessCode = businessCode ;
         this.beneficiaryName = beneficiaryName ;
@@ -27,4 +31,6 @@ public class CreateOne extends BeneficiaryCommands {
         this.beneficiaryType = type ;
 
     }
+
+
 }

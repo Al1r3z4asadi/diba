@@ -11,6 +11,7 @@ public final class BeneficiaryRequests {
             List<Integer> beneficiaryRoles ,
             Integer beneficiaryType
     ){
+
     }
 
 
