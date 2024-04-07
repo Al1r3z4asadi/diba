@@ -28,7 +28,10 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
 
     @EventListener
     void handleBeneficiaryWasUpdated(MessageEnvelope<BeneficiaryEvents.BeneficiaryUpdated> update) {
-
+        var data = update.data();
+        getAndUpdate(data.id().toString(), update,
+                view -> view.updateBeneficiary(data)
+                );
     }
 
 }

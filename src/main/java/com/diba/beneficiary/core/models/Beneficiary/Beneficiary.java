@@ -4,7 +4,7 @@ import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
-import com.diba.beneficiary.shared.dtos.UpdateBeneficiaryDto;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
@@ -13,7 +13,6 @@ import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 import java.util.List;
 import java.util.UUID;
 
-//rich domain model vs anemic domain model
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     private String businessCode;
@@ -22,9 +21,6 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private List<BeneficiaryRole> beneficiaryRoles;
     private BeneficiaryType beneficiaryType;
     private BeneficiaryStatus status ;
-
-
-
 
     public Beneficiary() {
 
@@ -38,8 +34,25 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                                 beneficiaryName , beneficiaryRoles,type , metaData);
     }
 
-    public void update(UpdateBeneficiaryDto update){
+    public static void validateBussinesCode(String bussinesCode) throws BeneficiaryException {
+        if(bussinesCode.length() != 2){
+            throw new BeneficiaryException(ErrorCodes.BUSINESS_CODE_NOT_VALID.getMessage()
+                    , ErrorCodes.BUSINESS_CODE_NOT_VALID.getCode());
+        }
+    }
 
+    public void update(UpdateOne update){
+
+        UserMetadata metadata =  new UserMetadata( update.getId().toString(), update.getIid());
+        try {
+            enqueue(new BeneficiaryEvents.BeneficiaryUpdated(UUID.randomUUID(),
+                    update.getBusinessCode(), update.getBeneficiaryNameEn(),
+                    update.getBeneficiaryName(), update.getBeneficiaryRoles(),
+                    update.getBeneficiaryType(), metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
     }
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
@@ -60,6 +73,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
         else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryCreated){
             apply((BeneficiaryEvents.BeneficiaryCreated) beneficiaryEvents);
+        }
+        else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryUpdated){
+            apply((BeneficiaryEvents.BeneficiaryUpdated) beneficiaryEvents);
         }
         else{
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
@@ -91,4 +107,12 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         version = 0;
     }
 
+    private void apply(BeneficiaryEvents.BeneficiaryUpdated updated){
+        businessCode = updated.businessCode();
+        beneficiaryNameEn = updated.beneficiaryNameEn() ;
+        beneficiaryName = updated.beneficiaryName();
+        beneficiaryRoles = updated.beneficiaryRoles();
+        beneficiaryType = updated.beneficiaryType();
+        version++;
+    }
 }

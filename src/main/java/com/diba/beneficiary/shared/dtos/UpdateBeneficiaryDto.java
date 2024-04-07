@@ -2,9 +2,11 @@ package com.diba.beneficiary.shared.dtos;
 
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class UpdateBeneficiaryDto {
     private String iid ;
     private String businessCode ;

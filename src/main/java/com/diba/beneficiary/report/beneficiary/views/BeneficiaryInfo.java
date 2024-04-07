@@ -3,6 +3,7 @@ package com.diba.beneficiary.report.beneficiary.views;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.report.VersionedView;
+import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.shared.messages.events.EventMetadata;
 
 import lombok.Data;
@@ -43,6 +44,14 @@ public class BeneficiaryInfo implements VersionedView {
         this.version = version ;
     }
 
+
+    public BeneficiaryInfo updateBeneficiary(BeneficiaryEvents.BeneficiaryUpdated updated){
+        this.setBeneficiaryName(updated.beneficiaryName());
+        this.setBeneficiaryNameEn(updated.beneficiaryNameEn());
+        this.setBeneficiaryRoles(updated.beneficiaryRoles());
+        this.setBeneficiaryType(updated.beneficiaryType());
+        return this;
+    }
 
     @Override
     public long getLastProcessedPosition() {

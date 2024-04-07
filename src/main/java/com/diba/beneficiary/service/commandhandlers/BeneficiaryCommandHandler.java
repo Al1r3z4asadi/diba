@@ -38,8 +38,8 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) throws BeneficiaryException {
         return  _domainService.createNewBeneficiary(create) ;
     }
-    public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> handle(UpdateOne udpate ) throws BeneficiaryException {
-        return _domainService.updateBeneficiary(udpate);
+    public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> handle(UpdateOne update ) throws BeneficiaryException {
+        return _domainService.updateBeneficiary(update);
     }
 
 

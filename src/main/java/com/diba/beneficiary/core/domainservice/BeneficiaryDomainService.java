@@ -32,15 +32,27 @@ public class BeneficiaryDomainService {
 
     }
 
-    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(CreateOne data) throws BeneficiaryException {
-        CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> future = new CompletableFuture<>();
-
-        var bene =  _localRepo.findByBusinessCode(data.getBusinessCode()).block();
+    private void checkIfNotExistInLocalDB(String bussinesCode) throws BeneficiaryException {
+        var bene =  _localRepo.findByBusinessCode(bussinesCode).block();
         if(bene != null){
             throw new BeneficiaryException(ErrorCodes.BUSINESS_CODE_ALREADY_EXISTS.getMessage()
                     , ErrorCodes.BUSINESS_CODE_ALREADY_EXISTS.getCode());
         }
+    }
+    private BeneficiaryModel checkIfExistInLocalDB(String id) throws BeneficiaryException {
+        var bene =  _localRepo.findByid(id).block();
+        if(bene == null){
+            throw new BeneficiaryException(ErrorCodes.BENEFICIARY_DOES_NOT_EXISTS.getMessage()
+                    , ErrorCodes.BENEFICIARY_DOES_NOT_EXISTS.getCode());
+        }
+        return bene ;
+    }
 
+
+    public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(CreateOne data) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> future = new CompletableFuture<>();
+        Beneficiary.validateBussinesCode(data.getBusinessCode());
+        checkIfNotExistInLocalDB(data.getBusinessCode());
         CompletableFuture.runAsync(() -> {
             String sid = _localRepo.insert(new BeneficiaryModel(data.getBusinessCode())).block().getId();
             UUID id = UUID.fromString(sid);
@@ -59,15 +71,18 @@ public class BeneficiaryDomainService {
         return future ;
     }
 
-    public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> updateBeneficiary(UpdateOne update) {
+    public CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> updateBeneficiary(UpdateOne update) throws BeneficiaryException {
         CompletableFuture<ServiceResult<BeneficiaryUpdatedDto>> future = new CompletableFuture<>();
         UpdateBeneficiaryDto updateDto = ToDto.toUpdateBeneficiaryDto(update);
+        Beneficiary.validateBussinesCode(update.getBusinessCode());
+        var bene = checkIfExistInLocalDB(update.getIid());
+        checkIfNotExistInLocalDB(update.getBusinessCode());
         CompletableFuture.runAsync(() -> {
             ETag result  ;
             try {
                 result = _esdbRepo.getAndUpdate(
-                        current -> current.update(updateDto) ,
-                        update.getId() ,
+                        current -> current.update(update) ,
+                        UUID.fromString(updateDto.getIid()),
                         update.getExpectedVersion()
                 );
             } catch (Exception e) {
@@ -75,6 +90,8 @@ public class BeneficiaryDomainService {
             }
 
             future.complete(ServiceResult.success(new BeneficiaryUpdatedDto(update.getIid() , result)));
+            bene.setBusinessCode(update.getBusinessCode());
+            _localRepo.save(bene).subscribe();
         });
         return future ;
     }

@@ -25,33 +25,28 @@ public abstract class Projection<View, Id> {
         }
         repository.save(result).block();
     }
-
-    protected <Event extends IEvent> void getAndUpdate(
-            Id viewId,
+    protected <Event extends IEvent> void getAndUpdate(Id viewId,
             MessageEnvelope<Event> eventEnvelope,
             Function<View, View> handle
     ) {
-        var view = repository.findById(viewId).block();
-
-        if (view.isEmpty()) {
+        View view = repository.findById(viewId).block();
+        if (view == null) {
             logger.warn("View with id %s was not found for event %s".formatted(viewId, eventEnvelope.metadata().eventType()));
             return;
         }
-
-        if (view.get() instanceof VersionedView versionedView && wasAlreadyApplied(versionedView, eventEnvelope)) {
+        if (view instanceof VersionedView versionedView && wasAlreadyApplied(versionedView, eventEnvelope)) {
             logger.warn("View with id %s was already applied for event %s".formatted(viewId, eventEnvelope.metadata().eventType()));
             return;
         }
-
-        var result = handle.apply(view.get());
-
+        var result = handle.apply(view);
         if(result instanceof VersionedView versionedView){
             versionedView.setMetadata(eventEnvelope.metadata());
         }
-
         repository.save(result);
     }
 
 
-
+    private static boolean wasAlreadyApplied(VersionedView view, MessageEnvelope<?> eventEnvelope) {
+        return view.getLastProcessedPosition() >= eventEnvelope.metadata().logPosition();
+    }
 }
