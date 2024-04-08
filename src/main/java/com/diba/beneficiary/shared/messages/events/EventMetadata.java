@@ -5,6 +5,8 @@ public record EventMetadata(
         String eventId,
         long streamPosition,
         String eventType,
-        long logPosition
+        long logPosition,
+        String StreamId
+
 ) {
 }

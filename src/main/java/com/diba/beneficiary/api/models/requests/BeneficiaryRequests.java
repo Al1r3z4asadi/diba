@@ -1,6 +1,7 @@
 package com.diba.beneficiary.api.models.requests;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,9 +25,9 @@ public final class BeneficiaryRequests {
     }
 
     public record  ChangeStatus(
-        int staus ,
-        LocalDateTime inactivityStartDate ,
-        LocalDateTime inactivityEndDate
+        int status ,
+        ZonedDateTime inactivityStartDate ,
+        ZonedDateTime inactivityEndDate
     ){
 
     }

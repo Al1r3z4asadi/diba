@@ -1,6 +1,6 @@
 package com.diba.beneficiary.api.controllers;
 
-import com.diba.beneficiary.api.models.ToCommand;
+import com.diba.beneficiary.api.models.mapper.ToCommand;
 import com.diba.beneficiary.api.models.response.Envelope;
 import com.diba.beneficiary.core.http.ETag;
 import com.diba.beneficiary.core.service.IMessageDispatcher;
@@ -65,11 +65,22 @@ public class BeneficiaryController {
         });
     }
 
+    @PutMapping("/update-status")
+    public Mono<ResponseEntity<Envelope>> changeStatus(UUID id , @RequestBody BeneficiaryRequests.ChangeStatus changeStatus,
+                                                            @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch){
+        BeneficiaryCommands command = ToCommand.toChangeStatus(id , changeStatus , ifMatch.toLong());
+        Mono<ServiceResult<String>> result  =  _dispatcher.dispatch(command);
 
-//    @PutMapping("/update-status")
-//    public Mono<ResponseEntity<Envelope>> changeStatus(UUID id , @RequestBody BeneficiaryRequests.ChangeStatus changeStatus,
-//                                                            @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch){
-//
-//    }
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });    }
 
 }

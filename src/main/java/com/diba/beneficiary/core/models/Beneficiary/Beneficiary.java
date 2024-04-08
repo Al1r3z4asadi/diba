@@ -4,12 +4,15 @@ import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +24,8 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private List<BeneficiaryRole> beneficiaryRoles;
     private BeneficiaryType beneficiaryType;
     private BeneficiaryStatus status ;
-
+    private ZonedDateTime inactivityStartDate ;
+    private  ZonedDateTime inactivityEndDate ;
     public Beneficiary() {
 
     }
@@ -41,11 +45,18 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
     }
 
+    public static void validateStatus(BeneficiaryStatus status) throws BeneficiaryException {
+        if(status == BeneficiaryStatus.REJECTED){
+            throw new BeneficiaryException(ErrorCodes.STATUS_CAN_NOT_CHANGE.getMessage()
+                    , ErrorCodes.STATUS_CAN_NOT_CHANGE.getCode());
+        }
+    }
+
     public void update(UpdateOne update){
 
         UserMetadata metadata =  new UserMetadata( update.getId().toString(), update.getIid());
         try {
-            enqueue(new BeneficiaryEvents.BeneficiaryUpdated(  UUID.fromString(update.getIid()),
+            enqueue(new BeneficiaryEvents.BeneficiaryUpdated(  UUID.randomUUID(),
                     update.getBusinessCode(), update.getBeneficiaryNameEn(),
                     update.getBeneficiaryName(), update.getBeneficiaryRoles(),
                     update.getBeneficiaryType(), metadata));
@@ -53,6 +64,19 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         catch (Exception e){
             // log exception if not sth happend
         }
+    }
+    public void ChangeStatus(ChangeStatus status) {
+        UserMetadata metadata =  new UserMetadata( status.getId().toString(), status.getIid());
+        try {
+            enqueue(new BeneficiaryEvents.BeneficiaryStatusChanged(
+                    UUID.randomUUID() , status.getStatus() , status.getInactivityStartDate() ,
+                    status.getInactivityEndDate(),
+                    metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
+
     }
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
@@ -77,6 +101,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryUpdated){
             apply((BeneficiaryEvents.BeneficiaryUpdated) beneficiaryEvents);
         }
+        else if(beneficiaryEvents instanceof  BeneficiaryEvents.BeneficiaryStatusChanged){
+            apply((BeneficiaryEvents.BeneficiaryStatusChanged) beneficiaryEvents);
+        }
         else{
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
                     ErrorCodes.UNSUPPORTED_EVENT.getCode());
@@ -91,8 +118,6 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     public static String mapToStreamId(UUID id) {
         return "Beneficiary-%s".formatted(id);
     }
-
-
 
     // applies
 
@@ -114,4 +139,11 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         beneficiaryRoles = updated.beneficiaryRoles();
         beneficiaryType = updated.beneficiaryType();
     }
+
+    private void apply(BeneficiaryEvents.BeneficiaryStatusChanged statusChanged){
+        this.status = statusChanged.status();
+        this.inactivityEndDate = statusChanged.inactivityEndDate();
+        this.inactivityStartDate = statusChanged.inactivityStartDate() ;
+    }
+
 }

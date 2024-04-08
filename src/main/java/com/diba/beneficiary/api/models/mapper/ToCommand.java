@@ -1,10 +1,12 @@
-package com.diba.beneficiary.api.models;
+package com.diba.beneficiary.api.models.mapper;
 
 import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 
@@ -33,7 +35,7 @@ public class ToCommand {
                 .map(ToCommand::toEnum)
                 .collect(Collectors.toList());
     }
-    public static BeneficiaryRole toEnum(Integer value) {
+    private static BeneficiaryRole toEnum(Integer value) {
         try {
             return BeneficiaryRole.fromValue(value);
         } catch (BeneficiaryException e) {
@@ -41,12 +43,27 @@ public class ToCommand {
             return null ;
         }
     }
-    public static BeneficiaryType toTypeEnum(Integer value) {
+    private static BeneficiaryType toTypeEnum(Integer value) {
         try {
             return BeneficiaryType.fromValue(value);
         } catch (BeneficiaryException e) {
             //add logg and rabbit as enricher
             return null ;
         }
+    }
+
+    public static BeneficiaryStatus toStatusEnum(int value) {
+        try {
+            return BeneficiaryStatus.fromValue(value);
+        } catch (BeneficiaryException e) {
+            //add logg and rabbit as enricher
+            return null ;
+        }
+    }
+
+    public static BeneficiaryCommands toChangeStatus(UUID id, BeneficiaryRequests.ChangeStatus request , Long version) {
+        BeneficiaryCommands command = new ChangeStatus(id.toString() , ToCommand.toStatusEnum(request.status()) ,
+                request.inactivityStartDate() , request.inactivityEndDate() , version);
+        return command ;
     }
 }

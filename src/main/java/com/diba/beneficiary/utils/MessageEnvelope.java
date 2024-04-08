@@ -1,6 +1,7 @@
 package com.diba.beneficiary.utils;
 
-import com.diba.beneficiary.events.EventMetadata;
+
+import com.diba.beneficiary.shared.messages.events.EventMetadata;
 import com.eventstore.dbclient.ResolvedEvent;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
@@ -29,7 +30,8 @@ public record MessageEnvelope<Event extends Message>(
                                 resolvedEvent.getEvent().getEventId().toString(),
                                 resolvedEvent.getEvent().getPosition().getCommitUnsigned(),
                                 resolvedEvent.getEvent().getEventType(),
-                                resolvedEvent.getEvent().getRevision()
+                                resolvedEvent.getEvent().getRevision() ,
+                                resolvedEvent.getEvent().getStreamId()
                         )
                 )
         );

@@ -11,6 +11,7 @@ import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
 import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
 import com.diba.beneficiary.shared.dtos.UpdateBeneficiaryDto;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
@@ -39,6 +40,7 @@ public class BeneficiaryDomainService {
                     , ErrorCodes.BUSINESS_CODE_ALREADY_EXISTS.getCode());
         }
     }
+
     private BeneficiaryModel checkIfExistInLocalDB(String id) throws BeneficiaryException {
         var bene =  _localRepo.findByid(id).block();
         if(bene == null){
@@ -47,7 +49,6 @@ public class BeneficiaryDomainService {
         }
         return bene ;
     }
-
 
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> createNewBeneficiary(CreateOne data) throws BeneficiaryException {
         CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> future = new CompletableFuture<>();
@@ -95,4 +96,26 @@ public class BeneficiaryDomainService {
         });
         return future ;
     }
+
+    public CompletableFuture<ServiceResult<String>> changeStatus(ChangeStatus status) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        Beneficiary.validateStatus(status.getStatus());
+        var bene = checkIfExistInLocalDB(status.getIid());
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(
+                        current -> current.ChangeStatus(status) ,
+                        UUID.fromString(status.getIid()),
+                        status.getExpectedVersion()
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(status.getIid()));
+            _localRepo.save(bene).subscribe();
+        });
+        return future ;
+    }
+
+
 }

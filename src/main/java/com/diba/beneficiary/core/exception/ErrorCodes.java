@@ -8,6 +8,7 @@ public enum ErrorCodes {
     BENEFICIARY_DOES_NOT_EXISTS("Beneficiary does not exist" , "10006") ,
 
     BUSINESS_CODE_NOT_VALID("Bussiness code not valid " , "10006") ,
+    STATUS_CAN_NOT_CHANGE("This Status can not be changed" , "10007") ,
 
     INVALID_BENEFICIARY_ROLE("This Role does not EXIST" , "ERR0005"),
     INVALID_BENEFICIARY_STATUS("This Status is invalid" , "ERR0006"),
