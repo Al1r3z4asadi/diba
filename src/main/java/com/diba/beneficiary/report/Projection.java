@@ -42,11 +42,13 @@ public abstract class Projection<View, Id> {
         if(result instanceof VersionedView versionedView){
             versionedView.setMetadata(eventEnvelope.metadata());
         }
-        repository.save(result);
+        repository.save(result).subscribe();
     }
 
 
     private static boolean wasAlreadyApplied(VersionedView view, MessageEnvelope<?> eventEnvelope) {
-        return view.getLastProcessedPosition() >= eventEnvelope.metadata().logPosition();
+        var lastPosition = view.getLastProcessedPosition();
+        var logPosition = eventEnvelope.metadata().streamPosition();
+        return lastPosition >= logPosition;
     }
 }

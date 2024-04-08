@@ -97,7 +97,7 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
                 () -> new RuntimeException("Stream with id %s was not found".formatted(streamId))
         );
         handle.accept(entity);
-        return appendEvents(entity, AppendToStreamOptions.get().expectedRevision(expectedRevision));
+        return appendEvents(entity, AppendToStreamOptions.get());
     }
 
     //privates

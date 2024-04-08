@@ -47,6 +47,7 @@ public class BeneficiaryInfo implements VersionedView {
 
     public BeneficiaryInfo updateBeneficiary(BeneficiaryEvents.BeneficiaryUpdated updated){
         this.setBeneficiaryName(updated.beneficiaryName());
+        this.setBusinessCode(updated.businessCode());
         this.setBeneficiaryNameEn(updated.beneficiaryNameEn());
         this.setBeneficiaryRoles(updated.beneficiaryRoles());
         this.setBeneficiaryType(updated.beneficiaryType());

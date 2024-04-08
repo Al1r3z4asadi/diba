@@ -45,7 +45,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
         UserMetadata metadata =  new UserMetadata( update.getId().toString(), update.getIid());
         try {
-            enqueue(new BeneficiaryEvents.BeneficiaryUpdated(UUID.randomUUID(),
+            enqueue(new BeneficiaryEvents.BeneficiaryUpdated(  UUID.fromString(update.getIid()),
                     update.getBusinessCode(), update.getBeneficiaryNameEn(),
                     update.getBeneficiaryName(), update.getBeneficiaryRoles(),
                     update.getBeneficiaryType(), metadata));
@@ -113,6 +113,5 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         beneficiaryName = updated.beneficiaryName();
         beneficiaryRoles = updated.beneficiaryRoles();
         beneficiaryType = updated.beneficiaryType();
-        version++;
     }
 }
