@@ -39,4 +39,14 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
                 );
     }
 
+    @EventListener
+    void handleBeneficiaryStatusChanged(MessageEnvelope<BeneficiaryEvents.BeneficiaryStatusChanged> statusChanged) {
+        var data = statusChanged.data();
+        int id_size = statusChanged.metadata().StreamId().length();
+        int uuidSize = UUID.randomUUID().toString().length() ;
+        var streamId = statusChanged.metadata().StreamId().substring(id_size - uuidSize);
+        getAndUpdate(streamId, statusChanged,
+                view -> view.changeStatus(data)
+        );
+    }
 }

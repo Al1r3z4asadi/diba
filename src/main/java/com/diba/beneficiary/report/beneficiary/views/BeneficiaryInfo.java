@@ -1,6 +1,7 @@
 package com.diba.beneficiary.report.beneficiary.views;
 
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
+import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
 import com.diba.beneficiary.report.VersionedView;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
@@ -10,6 +11,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -24,6 +26,9 @@ public class BeneficiaryInfo implements VersionedView {
     private String beneficiaryName ;
     private List<BeneficiaryRole> beneficiaryRoles;
     private BeneficiaryType beneficiaryType;
+    private BeneficiaryStatus status ;
+    private LocalDateTime inactivityStartDate ;
+    private  LocalDateTime inactivityEndDate ;
     private long version;
     private long lastProcessedPosition;
 
@@ -51,6 +56,14 @@ public class BeneficiaryInfo implements VersionedView {
         this.setBeneficiaryNameEn(updated.beneficiaryNameEn());
         this.setBeneficiaryRoles(updated.beneficiaryRoles());
         this.setBeneficiaryType(updated.beneficiaryType());
+        return this;
+    }
+
+
+    public BeneficiaryInfo changeStatus(BeneficiaryEvents.BeneficiaryStatusChanged statusChanged){
+        this.setStatus(statusChanged.status());
+        this.setInactivityStartDate(statusChanged.inactivityStartDate());
+        this.setInactivityEndDate(statusChanged.inactivityEndDate());
         return this;
     }
 
