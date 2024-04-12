@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -57,6 +58,7 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<Object> {
                 "",
                 ""
         );
+
         UUID eventId = UUID.randomUUID();
         return EventData
                 .builderAsJson(

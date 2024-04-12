@@ -28,8 +28,8 @@ public final class BeneficiaryRequests {
 
     public record  ChangeStatus(
         int status ,
-        ZonedDateTime inactivityStartDate ,
-        ZonedDateTime inactivityEndDate
+        LocalDateTime inactivityStartDate ,
+        LocalDateTime inactivityEndDate
     ){
 
     }

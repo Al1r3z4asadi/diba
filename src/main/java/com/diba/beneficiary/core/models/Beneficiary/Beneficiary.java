@@ -12,7 +12,6 @@ import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +23,8 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private List<BeneficiaryRole> beneficiaryRoles;
     private BeneficiaryType beneficiaryType;
     private BeneficiaryStatus status ;
-    private ZonedDateTime inactivityStartDate ;
-    private  ZonedDateTime inactivityEndDate ;
+    private LocalDateTime inactivityStartDate ;
+    private  LocalDateTime inactivityEndDate ;
     public Beneficiary() {
 
     }

@@ -37,8 +37,8 @@ public interface BeneficiaryEvents extends IEvent {
         record BeneficiaryStatusChanged(
                 UUID id ,
                 BeneficiaryStatus status,
-                ZonedDateTime inactivityStartDate,
-                ZonedDateTime inactivityEndDate,
+                LocalDateTime inactivityStartDate,
+                LocalDateTime inactivityEndDate,
                 UserMetadata metadata
     )implements BeneficiaryEvents{
     }
