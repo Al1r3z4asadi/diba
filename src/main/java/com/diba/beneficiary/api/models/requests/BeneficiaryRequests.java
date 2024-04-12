@@ -1,5 +1,7 @@
 package com.diba.beneficiary.api.models.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;

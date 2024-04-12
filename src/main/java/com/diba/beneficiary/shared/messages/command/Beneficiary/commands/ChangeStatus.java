@@ -1,10 +1,12 @@
 package com.diba.beneficiary.shared.messages.command.Beneficiary.commands;
 
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import java.time.ZonedDateTime;
 
 @Data
+@JsonSerialize
 public class ChangeStatus extends BeneficiaryCommands {
 
     private String iid ;
