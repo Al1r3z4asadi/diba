@@ -7,15 +7,18 @@ import com.diba.beneficiary.core.service.IMessageDispatcher;
 import com.diba.beneficiary.shared.messages.command.Query;
 import com.diba.beneficiary.shared.messages.utils.Message;
 import com.diba.beneficiary.shared.ServiceResult;
+import com.diba.beneficiary.shared.messages.utils.MessageTypeMapper;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 import com.eventstore.dbclient.EventData;
+import com.eventstore.dbclient.EventDataBuilder;
 import com.eventstore.dbclient.EventStoreDBClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,13 +28,15 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<Object> {
     private final EventStoreDBClient eventStoreDBClient;
     private final ICommandHandler _chandler ;
     private final IQueryHandler _qhandler;
+    private final ObjectMapper _mapper ;
 
     @Autowired
     public ESAsyncDispatcher(EventStoreDBClient eventStoreDBClient , ICommandHandler<Command> commandHandler,
-                IQueryHandler queryHandler) {
+                             IQueryHandler queryHandler , ObjectMapper mapper) {
         this.eventStoreDBClient = eventStoreDBClient;
         this._chandler = commandHandler ;
         this._qhandler = queryHandler ;
+        _mapper = mapper ;
     }
     @Override
     public <T extends Message> Mono<ServiceResult<Object>> dispatch(T message) {
@@ -58,14 +63,16 @@ public class ESAsyncDispatcher<R> implements IMessageDispatcher<Object> {
                 "",
                 ""
         );
-
         UUID eventId = UUID.randomUUID();
-        return EventData
+        try { return EventData
                 .builderAsJson(
                         eventId,
                         message.getClass().toString(),
-                        message
+                        _mapper.writeValueAsBytes(message)
                 ).metadataAsJson(userMetadata)
                 .build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

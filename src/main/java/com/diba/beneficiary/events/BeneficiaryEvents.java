@@ -1,6 +1,6 @@
 package com.diba.beneficiary.events;
 
-import com.diba.beneficiary.utils.UserMetadata;
+import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.util.List;
 import java.util.UUID;
