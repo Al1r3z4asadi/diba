@@ -1,9 +1,6 @@
 package com.diba.beneficiary.api.models.requests;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +27,13 @@ public final class BeneficiaryRequests {
         int status ,
         LocalDateTime inactivityStartDate ,
         LocalDateTime inactivityEndDate
+    ){
+
+    }
+
+    public record assignBrokersToSupplier(
+            UUID beneficiaryId,
+            List<UUID> brokerIds
     ){
 
     }

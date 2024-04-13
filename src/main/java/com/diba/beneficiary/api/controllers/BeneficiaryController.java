@@ -81,6 +81,25 @@ public class BeneficiaryController {
                 Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
             }
-        });    }
+        });
+    }
+    @PostMapping("/broker-relation/add")
+    public Mono<ResponseEntity<Envelope>> AssignBrokersToSupplier(@RequestBody BeneficiaryRequests.assignBrokersToSupplier assign
+            ,@RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
+    ){
+        BeneficiaryCommands command = ToCommand.toAssignBrokersToSupplier(assign.beneficiaryId() , assign , ifMatch.toLong());
+        Mono<ServiceResult<String>> result  =  _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
 
 }

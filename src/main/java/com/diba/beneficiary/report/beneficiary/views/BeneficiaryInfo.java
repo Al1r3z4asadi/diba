@@ -67,6 +67,12 @@ public class BeneficiaryInfo implements VersionedView {
         return this;
     }
 
+    public BeneficiaryInfo assignStatus(BeneficiaryEvents.BrokersWasAssignedToSupplier assigned){
+
+        return this;
+    }
+
+
     @Override
     public long getLastProcessedPosition() {
         return lastProcessedPosition;

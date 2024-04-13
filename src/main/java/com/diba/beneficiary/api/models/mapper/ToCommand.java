@@ -5,10 +5,7 @@ import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.BeneficiaryCommands;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -64,6 +61,11 @@ public class ToCommand {
     public static BeneficiaryCommands toChangeStatus(UUID id, BeneficiaryRequests.ChangeStatus request , Long version) {
         BeneficiaryCommands command = new ChangeStatus(id.toString() , ToCommand.toStatusEnum(request.status()) ,
                 request.inactivityStartDate() , request.inactivityEndDate() , version);
+        return command ;
+    }
+
+    public static BeneficiaryCommands toAssignBrokersToSupplier(UUID id , BeneficiaryRequests.assignBrokersToSupplier assign , Long version) {
+        BeneficiaryCommands command = new AssignBrokersToSupplier(id.toString() , assign.brokerIds() , version);
         return command ;
     }
 }

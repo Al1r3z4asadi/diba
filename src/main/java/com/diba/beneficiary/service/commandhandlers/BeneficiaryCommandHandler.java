@@ -4,6 +4,7 @@ import com.diba.beneficiary.core.domainservice.OrderDomainService;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.order.Order;
 import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AssignBrokersToSupplier;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
@@ -46,5 +47,8 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
         return _domainService.changeStatus(update);
     }
 
+    public CompletableFuture<ServiceResult<String>> handle(AssignBrokersToSupplier assign) throws BeneficiaryException {
+        return _domainService.assignBroker(assign);
+    }
 
 }

@@ -4,6 +4,7 @@ import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AssignBrokersToSupplier;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
@@ -12,7 +13,9 @@ import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
@@ -25,6 +28,8 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private BeneficiaryStatus status ;
     private LocalDateTime inactivityStartDate ;
     private  LocalDateTime inactivityEndDate ;
+    private List<SupplierBroker> brokers ;
+    private List<SupplierBroker> suppliers ;
     public Beneficiary() {
 
     }
@@ -71,6 +76,21 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                     UUID.randomUUID() , status.getStatus() , status.getInactivityStartDate() ,
                     status.getInactivityEndDate(),
                     metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
+
+    }
+    public void AssignBrokers(AssignBrokersToSupplier assign) {
+        UserMetadata metadata =  new UserMetadata(assign.getId().toString(),  assign.getBeneficiaryId());
+        Map<UUID, SupplierBroker> brokerIds = new HashMap<>();
+        for (var item : assign.getIds()) {
+            brokerIds.put(UUID.randomUUID(), item);
+        }
+        try {
+            enqueue(new BeneficiaryEvents.BrokersWasAssignedToSupplier(
+                    UUID.randomUUID() , brokerIds , metadata));
         }
         catch (Exception e){
             // log exception if not sth happend
@@ -144,5 +164,6 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         this.inactivityEndDate = statusChanged.inactivityEndDate();
         this.inactivityStartDate = statusChanged.inactivityStartDate() ;
     }
+
 
 }

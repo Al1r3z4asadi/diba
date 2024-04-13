@@ -11,6 +11,7 @@ import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
 import com.diba.beneficiary.shared.dtos.BeneficiaryCreatedDto;
 import com.diba.beneficiary.shared.dtos.BeneficiaryUpdatedDto;
 import com.diba.beneficiary.shared.dtos.UpdateBeneficiaryDto;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AssignBrokersToSupplier;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.CreateOne;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
@@ -117,5 +118,23 @@ public class BeneficiaryDomainService {
         return future ;
     }
 
+
+    public CompletableFuture<ServiceResult<String>> assignBroker(AssignBrokersToSupplier assign) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        checkIfExistInLocalDB(assign.getBeneficiaryId().toString());
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(
+                        current -> current.AssignBrokers(assign) ,
+                        UUID.fromString(assign.getBeneficiaryId()),
+                        assign.getExpectedVersion()
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(assign.getBeneficiaryId()));
+        });
+        return future ;
+    }
 
 }
