@@ -4,6 +4,7 @@ import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AddItemBeneficiaryWhiteList;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AssignBrokersToSupplier;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
@@ -13,10 +14,7 @@ import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
@@ -30,6 +28,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private  LocalDateTime inactivityEndDate ;
     private List<SupplierBroker> brokers ;
     private List<SupplierBroker> suppliers ;
+
+    private List<IpWhiteList> whiteLists = new ArrayList<>();
+
     public Beneficiary() {
 
     }
@@ -97,6 +98,18 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
 
     }
+    public void AddItemBeneficairyWhiteList(AddItemBeneficiaryWhiteList addIp) {
+        UserMetadata metadata =  new UserMetadata(addIp.getId().toString(),  addIp.getBeneficiaryId());
+        try {
+            enqueue(new BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList(
+                    UUID.randomUUID() , addIp.getIp() ,addIp.getIpType(), metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
+    }
+
+
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
                         String beneficiaryName , List<BeneficiaryRole> beneficiaryRoles ,
@@ -122,6 +135,12 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
         else if(beneficiaryEvents instanceof  BeneficiaryEvents.BeneficiaryStatusChanged){
             apply((BeneficiaryEvents.BeneficiaryStatusChanged) beneficiaryEvents);
+        }
+        else if(beneficiaryEvents instanceof BeneficiaryEvents.BrokersWasAssignedToSupplier){
+            apply((BeneficiaryEvents.BrokersWasAssignedToSupplier) beneficiaryEvents);
+        }
+        else if(beneficiaryEvents instanceof BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList){
+            apply((BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList) beneficiaryEvents);
         }
         else{
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
@@ -164,6 +183,11 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         this.inactivityEndDate = statusChanged.inactivityEndDate();
         this.inactivityStartDate = statusChanged.inactivityStartDate() ;
     }
+    private void apply(BeneficiaryEvents.BrokersWasAssignedToSupplier addedBroker ){
+        this.brokers =  addedBroker.brokerIds().values().stream().toList();
+    }
 
-
+    private void apply(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList ItemAddedToWhiteList ){
+        //TODO: apply event
+    }
 }

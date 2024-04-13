@@ -4,6 +4,7 @@ import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.core.models.Beneficiary.enums.IpType;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
@@ -47,5 +48,13 @@ public interface BeneficiaryEvents extends IEvent {
 
             UserMetadata metadata
     )implements BeneficiaryEvents{ }
+
+    record  ItemBeneficiaryAddedtoWhiteList(
+            UUID id ,
+            String ip ,
+            IpType ipType ,
+            UserMetadata metaData
+    )
+    implements BeneficiaryEvents{ }
 
 }

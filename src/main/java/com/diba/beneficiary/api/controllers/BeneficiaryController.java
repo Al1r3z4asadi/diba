@@ -102,4 +102,23 @@ public class BeneficiaryController {
         });
     }
 
+    @PostMapping("/whitelist/add-one")
+    public Mono<ResponseEntity<Envelope>> AddItemBeneficiaryWhiteList(@RequestBody BeneficiaryRequests.AddItemBeneficiaryWhiteListRequest ip
+            ,@RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
+    ){
+        BeneficiaryCommands command = ToCommand.toAddItemBeneficiaryWhiteList(ip.beneficiaryId() , ip , ifMatch.toLong());
+        Mono<ServiceResult<String>> result  =  _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
+
 }

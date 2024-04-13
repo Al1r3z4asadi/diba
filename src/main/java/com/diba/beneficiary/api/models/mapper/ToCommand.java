@@ -5,6 +5,7 @@ import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.core.models.Beneficiary.enums.IpType;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
 
 import java.util.List;
@@ -58,6 +59,15 @@ public class ToCommand {
         }
     }
 
+    public static IpType toIpType(int value) {
+        try {
+            return IpType.fromValue(value);
+        } catch (BeneficiaryException e) {
+            //add logg and rabbit as enricher
+            return null ;
+        }
+    }
+
     public static BeneficiaryCommands toChangeStatus(UUID id, BeneficiaryRequests.ChangeStatus request , Long version) {
         BeneficiaryCommands command = new ChangeStatus(id.toString() , ToCommand.toStatusEnum(request.status()) ,
                 request.inactivityStartDate() , request.inactivityEndDate() , version);
@@ -66,6 +76,12 @@ public class ToCommand {
 
     public static BeneficiaryCommands toAssignBrokersToSupplier(UUID id , BeneficiaryRequests.assignBrokersToSupplier assign , Long version) {
         BeneficiaryCommands command = new AssignBrokersToSupplier(id.toString() , assign.brokerIds() , version);
+        return command ;
+    }
+
+    public static BeneficiaryCommands toAddItemBeneficiaryWhiteList(UUID uuid, BeneficiaryRequests.AddItemBeneficiaryWhiteListRequest ip, Long version) {
+        BeneficiaryCommands command = new AddItemBeneficiaryWhiteList(uuid.toString() ,
+                ip.ipAddress() , ToCommand.toIpType( ip.ipType()) , version);
         return command ;
     }
 }

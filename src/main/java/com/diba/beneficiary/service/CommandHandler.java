@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.service;
+package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.core.service.Ihandlers.ICommandHandler;

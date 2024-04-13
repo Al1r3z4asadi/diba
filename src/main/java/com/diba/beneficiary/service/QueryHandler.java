@@ -1,4 +1,4 @@
-package com.diba.beneficiary.core.service;
+package com.diba.beneficiary.service;
 
 import com.diba.beneficiary.core.service.Ihandlers.ICoreQueryHandler;
 import com.diba.beneficiary.core.service.Ihandlers.IQueryHandler;

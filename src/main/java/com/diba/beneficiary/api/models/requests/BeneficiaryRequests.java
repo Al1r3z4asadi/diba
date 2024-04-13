@@ -34,8 +34,12 @@ public final class BeneficiaryRequests {
     public record assignBrokersToSupplier(
             UUID beneficiaryId,
             List<UUID> brokerIds
-    ){
+    ){ }
 
-    }
+    public record AddItemBeneficiaryWhiteListRequest(
+            UUID beneficiaryId ,
+            String ipAddress ,
+            int ipType
+    ){ }
 
 }
