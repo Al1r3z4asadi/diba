@@ -42,4 +42,10 @@ public final class BeneficiaryRequests {
             int ipType
     ){ }
 
+    public record DeleteBeneficiary(
+            UUID beneficiaryId
+    ){
+
+    }
+
 }

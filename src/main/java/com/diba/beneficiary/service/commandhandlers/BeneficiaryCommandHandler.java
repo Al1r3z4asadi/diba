@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class BeneficiaryCommandHandler implements ICoreCommandHandler {
+public class BeneficiaryCommandHandler implements ICoreCommandHandler<BeneficiaryCommands> {
 
     @Autowired
     private  BeneficiaryDomainService _domainService ;
@@ -29,9 +29,8 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     }
 
     @Override
-    public boolean canHandle(Command commandType) {
-        //TODO : We will check what kind of commands this handler can handle
-        return true;
+    public boolean canHandle(BeneficiaryCommands commandType) {
+        return true ;
     }
 
     public CompletableFuture<ServiceResult<BeneficiaryCreatedDto>> handle(CreateOne create ) throws BeneficiaryException {
@@ -50,5 +49,9 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler {
     public CompletableFuture<ServiceResult<String>> handle(AddItemBeneficiaryWhiteList addIp) throws BeneficiaryException {
         return _domainService.addIp(addIp);
     }
+    public CompletableFuture<ServiceResult<String>> handle(DeleteBeneficiary delete) throws BeneficiaryException {
+        return _domainService.deleteBeneficiary(delete);
+    }
+
 
 }

@@ -57,4 +57,9 @@ public interface BeneficiaryEvents extends IEvent {
     )
     implements BeneficiaryEvents{ }
 
+    record BeneficiaryRemoved(
+            UUID id ,
+            UserMetadata metadata
+    ) implements  BeneficiaryEvents{}
+
 }

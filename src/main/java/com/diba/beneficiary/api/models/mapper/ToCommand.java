@@ -84,4 +84,9 @@ public class ToCommand {
                 ip.ipAddress() , ToCommand.toIpType( ip.ipType()) , version);
         return command ;
     }
+
+    public static BeneficiaryCommands toDeleteBeneficiary(UUID beneficairyId, Long version) {
+        BeneficiaryCommands command = new DeleteBeneficiary(beneficairyId.toString() , version);
+        return command ;
+    }
 }

@@ -4,10 +4,7 @@ import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AddItemBeneficiaryWhiteList;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.AssignBrokersToSupplier;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.ChangeStatus;
-import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.UpdateOne;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
@@ -109,6 +106,17 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
     }
 
+    public void DeleteBeneficairy(DeleteBeneficiary delete){
+        UserMetadata metadata =  new UserMetadata(delete.getId().toString(),  delete.getBeneficiaryId());
+        try {
+            enqueue(new BeneficiaryEvents.BeneficiaryRemoved(
+                    UUID.randomUUID() ,  metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
+    }
+
 
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
@@ -141,6 +149,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
         else if(beneficiaryEvents instanceof BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList){
             apply((BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList) beneficiaryEvents);
+        }
+        else if(beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryRemoved){
+            apply((BeneficiaryEvents.BeneficiaryRemoved) beneficiaryEvents);
         }
         else{
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
@@ -189,5 +200,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     private void apply(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList ItemAddedToWhiteList ){
         //TODO: apply event
+    }
+
+    private void apply(BeneficiaryEvents.BeneficiaryRemoved removed){
+        status = BeneficiaryStatus.INACTIVE;
     }
 }
