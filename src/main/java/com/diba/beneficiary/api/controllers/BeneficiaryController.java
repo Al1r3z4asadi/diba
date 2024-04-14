@@ -140,4 +140,25 @@ public class BeneficiaryController {
             }
         });
     }
+
+    @DeleteMapping("/whitelist/delete-one")
+    public Mono<ResponseEntity<Envelope>> DeleteItemFromBeneficiaryWhiteList(
+            @RequestBody BeneficiaryRequests.DeleteItemFromBeneficiaryWhiteListReqest beneficiary
+            ,@RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
+    ){
+        BeneficiaryCommands command = ToCommand.toDeleteItemFromBeneficiaryWhiteList(beneficiary.beneficiaryId()  , ifMatch.toLong());
+        Mono<ServiceResult<String>> result  =  _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
+
 }

@@ -117,6 +117,17 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         }
     }
 
+    public void removeIP(DeleteItemFromBeneficiaryWhiteList c){
+        UserMetadata metadata =  new UserMetadata(c.getId().toString(),  c.getBeneficiaryId());
+        try {
+            enqueue(new BeneficiaryEvents.ItemWasRemovedFromWhiteList(
+                    UUID.randomUUID() , UUID.fromString(c.getBeneficiaryId()) , metadata));
+        }
+        catch (Exception e){
+            // log exception if not sth happend
+        }
+    }
+
 
 
     private Beneficiary(UUID id , String businessCode , String beneficiaryNameEn ,
@@ -205,4 +216,8 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private void apply(BeneficiaryEvents.BeneficiaryRemoved removed){
         status = BeneficiaryStatus.INACTIVE;
     }
+    private void apply(BeneficiaryEvents.ItemWasRemovedFromWhiteList ItemRemovedWhiteList ){
+        //TODO: apply event
+    }
+
 }

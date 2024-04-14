@@ -171,4 +171,24 @@ public class BeneficiaryDomainService {
         });
         return future ;
     }
+
+    public CompletableFuture<ServiceResult<String>> deleteItemFromBeneficiaryWhiteList(DeleteItemFromBeneficiaryWhiteList c)
+            throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        var bene = checkIfExistInLocalDB(c.getBeneficiaryId().toString());
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(
+                        current -> current.removeIP(c) ,
+                        UUID.fromString(c.getBeneficiaryId()),
+                        c.getVersion()
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(c.getBeneficiaryId()));
+
+        });
+        return future ;
+    }
 }

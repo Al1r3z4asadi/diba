@@ -62,4 +62,10 @@ public interface BeneficiaryEvents extends IEvent {
             UserMetadata metadata
     ) implements  BeneficiaryEvents{}
 
+    record  ItemWasRemovedFromWhiteList(
+            UUID id ,
+            UUID whiteListId ,
+            UserMetadata metadata
+    )
+    implements  BeneficiaryEvents{ }
 }

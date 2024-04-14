@@ -52,6 +52,9 @@ public class BeneficiaryCommandHandler implements ICoreCommandHandler<Beneficiar
     public CompletableFuture<ServiceResult<String>> handle(DeleteBeneficiary delete) throws BeneficiaryException {
         return _domainService.deleteBeneficiary(delete);
     }
+    public CompletableFuture<ServiceResult<String>> handle(DeleteItemFromBeneficiaryWhiteList c) throws BeneficiaryException {
+        return _domainService.deleteItemFromBeneficiaryWhiteList(c);
+    }
 
 
 }
