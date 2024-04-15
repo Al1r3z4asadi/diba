@@ -1,7 +1,5 @@
 package com.diba.beneficiary.shared;
 
-
-
 import java.util.Optional;
 
 public class ServiceResult<T> {

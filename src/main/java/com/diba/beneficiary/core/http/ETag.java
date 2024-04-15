@@ -1,20 +1,21 @@
 package com.diba.beneficiary.core.http;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.regex.Pattern;
 
 public record ETag(String value) {
     private static final Pattern ETagPattern = Pattern.compile("\"([^\"]*)\"");
 
     @JsonCreator
-    public ETag{
+    public ETag {
         var regexMatcher = ETagPattern.matcher(value);
 
-        if(!regexMatcher.find())
+        if (!regexMatcher.find())
             throw new IllegalArgumentException("Not an ETag header");
     }
 
-    public static ETag weak(Object value){
+    public static ETag weak(Object value) {
         return new ETag("W/\"%s\"".formatted(value.toString()));
     }
 

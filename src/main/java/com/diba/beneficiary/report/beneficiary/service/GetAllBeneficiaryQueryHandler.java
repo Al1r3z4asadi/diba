@@ -14,19 +14,13 @@ import reactor.core.publisher.Mono;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
-public class GetAllBeneficiaryQueryHandler implements ICoreQueryHandler<GetBeneficiaries , BeneficiaryInfo> {
+public class GetAllBeneficiaryQueryHandler implements ICoreQueryHandler<GetBeneficiaries, BeneficiaryInfo> {
 
-    private final BeneficiaryReportRepository _repository ;
+    private final BeneficiaryReportRepository _repository;
 
     @Override
     public <Q extends Query> Flux<BeneficiaryInfo> handle(Q command) {
-        GetBeneficiaries c = (GetBeneficiaries) command ;
-        String businessCode = c.getBusinessCode();
-        String beneficiaryNameEn = c.getBeneficiaryNameEn();
-        int page  = c.getPage();
-        int size = c.getSize();
-        String sortField = c.getSortField();
-        Sort.Direction sortOrder = c.getSortOrder();
-        return  _repository.getAllBeneficiaries(c).log();
+        GetBeneficiaries c = (GetBeneficiaries) command;
+        return _repository.getAllBeneficiaries(c).log();
     }
 }

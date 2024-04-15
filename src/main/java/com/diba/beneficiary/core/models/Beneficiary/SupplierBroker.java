@@ -6,11 +6,11 @@ import java.util.UUID;
 
 @Data
 public class SupplierBroker {
-    private UUID id ;
-    private UUID thisId ;
+    private UUID id;
+    private UUID thisId;
 
     public SupplierBroker(String beneficiaryId, UUID thisId) {
         this.id = UUID.fromString(beneficiaryId);
-        this.thisId = thisId ;
+        this.thisId = thisId;
     }
 }

@@ -31,7 +31,7 @@ public class ESDBConfig {
             ISubscriptionCheckpointRepository subscriptionCheckpointRepository,
             IEventBus eventBus
     ) {
-        return new EventListener(eventStore, subscriptionCheckpointRepository,  eventBus);
+        return new EventListener(eventStore, subscriptionCheckpointRepository, eventBus);
     }
 
     @Bean

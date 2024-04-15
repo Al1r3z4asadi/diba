@@ -1,8 +1,9 @@
 package com.diba.beneficiary.report.beneficiary.views;
 
-import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryRole;
-import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
-import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryType;
+import com.diba.beneficiary.core.models.Beneficiary.BeneficiaryProduct;
+import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
+import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
+import com.diba.beneficiary.core.models.Beneficiary.enums.*;
 import com.diba.beneficiary.report.VersionedView;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.shared.messages.events.EventMetadata;
@@ -12,8 +13,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Document(collection = "BeneficiaryInfo")
 @Data
@@ -23,12 +24,31 @@ public class BeneficiaryInfo implements VersionedView {
     private String id;
     private String businessCode;
     private String beneficiaryNameEn;
-    private String beneficiaryName ;
+    private String beneficiaryName;
     private List<BeneficiaryRole> beneficiaryRoles;
     private BeneficiaryType beneficiaryType;
-    private BeneficiaryStatus status ;
-    private LocalDateTime inactivityStartDate ;
-    private  LocalDateTime inactivityEndDate ;
+    private BeneficiaryStatus status;
+    private LocalDateTime inactivityStartDate;
+    private LocalDateTime inactivityEndDate;
+    public NationalityType nationality;
+    private LocalDateTime admissionDate;
+    private String bourseCode;
+    private String tradeCode;
+    private String igmcCode;
+    private Integer billCode;
+    private String address;
+    private String postalCode;
+    private String phoneNumber;
+    private String faxNumber;
+    private String deputyName;
+    private String deputyFamilyName;
+    private String deputyPhoneNumber;
+    private BeneficiaryStep step;
+    private List<IpWhiteList> whiteLists = new ArrayList<>();
+    private List<SupplierBroker> brokers;
+    private List<SupplierBroker> suppliers;
+    private List<BeneficiaryProduct> products;
+
     private long version;
     private long lastProcessedPosition;
 
@@ -36,21 +56,48 @@ public class BeneficiaryInfo implements VersionedView {
 
     }
 
-    public BeneficiaryInfo(String id , String businessCode , String beneficiaryName ,
-                           String beneficiaryNameEn , List<BeneficiaryRole> roles , BeneficiaryType type ,
-                           long lastProcessedPosition , long version){
-        this.id = id ;
-        this.businessCode = businessCode ;
-        this.beneficiaryName = beneficiaryName ;
+    public BeneficiaryInfo(String id, String businessCode, String beneficiaryNameEn, String beneficiaryName,
+                           List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType beneficiaryType,
+                           BeneficiaryStatus status, LocalDateTime inactivityStartDate, LocalDateTime inactivityEndDate,
+                           NationalityType nationality, LocalDateTime admissionDate, String bourseCode,
+                           String tradeCode, String igmcCode, Integer billCode, String address, String postalCode,
+                           String phoneNumber, String faxNumber, String deputyName, String deputyFamilyName,
+                           String deputyPhoneNumber, BeneficiaryStep step, List<IpWhiteList> whiteLists,
+                           List<SupplierBroker> brokers, List<SupplierBroker> suppliers,
+                           List<BeneficiaryProduct> products, long lastProcessedPosition,
+                           long version) {
+        this.id = id;
+        this.businessCode = businessCode;
         this.beneficiaryNameEn = beneficiaryNameEn;
-        this.beneficiaryRoles = roles ;
-        this.beneficiaryType = type ;
-        this.lastProcessedPosition = lastProcessedPosition ;
-        this.version = version ;
+        this.beneficiaryName = beneficiaryName;
+        this.beneficiaryRoles = beneficiaryRoles;
+        this.beneficiaryType = beneficiaryType;
+        this.status = status;
+        this.inactivityStartDate = inactivityStartDate;
+        this.inactivityEndDate = inactivityEndDate;
+        this.nationality = nationality;
+        this.admissionDate = admissionDate;
+        this.bourseCode = bourseCode;
+        this.tradeCode = tradeCode;
+        this.igmcCode = igmcCode;
+        this.billCode = billCode;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phoneNumber = phoneNumber;
+        this.faxNumber = faxNumber;
+        this.deputyName = deputyName;
+        this.deputyFamilyName = deputyFamilyName;
+        this.deputyPhoneNumber = deputyPhoneNumber;
+        this.step = step;
+        this.whiteLists = whiteLists;
+        this.brokers = brokers;
+        this.suppliers = suppliers;
+        this.products = products;
+        this.lastProcessedPosition = lastProcessedPosition;
+        this.version = version;
     }
 
-
-    public BeneficiaryInfo updateBeneficiary(BeneficiaryEvents.BeneficiaryUpdated updated){
+    public BeneficiaryInfo updateBeneficiary(BeneficiaryEvents.BeneficiaryUpdated updated) {
         this.setBeneficiaryName(updated.beneficiaryName());
         this.setBusinessCode(updated.businessCode());
         this.setBeneficiaryNameEn(updated.beneficiaryNameEn());
@@ -59,19 +106,17 @@ public class BeneficiaryInfo implements VersionedView {
         return this;
     }
 
-
-    public BeneficiaryInfo changeStatus(BeneficiaryEvents.BeneficiaryStatusChanged statusChanged){
+    public BeneficiaryInfo changeStatus(BeneficiaryEvents.BeneficiaryStatusChanged statusChanged) {
         this.setStatus(statusChanged.status());
         this.setInactivityStartDate(statusChanged.inactivityStartDate());
         this.setInactivityEndDate(statusChanged.inactivityEndDate());
         return this;
     }
 
-    public BeneficiaryInfo assignStatus(BeneficiaryEvents.BrokersWasAssignedToSupplier assigned){
+    public BeneficiaryInfo assignStatus(BeneficiaryEvents.BrokersWasAssignedToSupplier assigned) {
 
         return this;
     }
-
 
     @Override
     public long getLastProcessedPosition() {

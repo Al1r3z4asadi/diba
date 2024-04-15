@@ -17,32 +17,34 @@ import java.util.concurrent.CompletableFuture;
 @Scope("singleton")
 public class CommandHandler<R> implements ICommandHandler {
 
-    private Map<String, ICoreCommandHandler> handlers ;
+    private Map<String, ICoreCommandHandler> handlers;
 
     private final ListableBeanFactory _beanFactory;
 
-    public CommandHandler(ListableBeanFactory beanFactory ) {
-        this._beanFactory = beanFactory ;
-        this.handlers = this._beanFactory.getBeansOfType(ICoreCommandHandler.class);;
+    public CommandHandler(ListableBeanFactory beanFactory) {
+        this._beanFactory = beanFactory;
+        this.handlers = this._beanFactory.getBeansOfType(ICoreCommandHandler.class);
+        ;
     }
 
     @Override
-    public CompletableFuture<ServiceResult<?>> handle(Command command )  {
+    public CompletableFuture<ServiceResult<?>> handle(Command command) {
         for (ICoreCommandHandler<?> handler : handlers.values()) {
             try {
-                var clazz = handler.getClass() ;
-                var instane = clazz.newInstance().getClass().getMethod("handle" , command.getClass());
-                CompletableFuture<ServiceResult<?>> result = (CompletableFuture<ServiceResult<?>>) instane.invoke(handler, command);
+                var clazz = handler.getClass();
+                var instane = clazz.newInstance().getClass().getMethod("handle", command.getClass());
+                CompletableFuture<ServiceResult<?>> result =
+                        (CompletableFuture<ServiceResult<?>>) instane.invoke(handler, command);
                 return result;
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
-                throw new RuntimeException(e) ;
+                throw new RuntimeException(e);
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             }
 
         }
-        return null ;// handle sth here
+        return null;// handle sth here
     }
 
 }

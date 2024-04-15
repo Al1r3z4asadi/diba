@@ -7,11 +7,9 @@ import com.eventstore.dbclient.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
-
 
 @Component
 public final class ESDBCheckpointRepository implements ISubscriptionCheckpointRepository {
@@ -68,7 +66,6 @@ public final class ESDBCheckpointRepository implements ISubscriptionCheckpointRe
             if (!(e.getCause() instanceof WrongExpectedVersionException))
                 throw new RuntimeException(e);
 
-            // Set the checkpoint stream to have at most 1 event
             var keepOnlyLastEvent = new StreamMetadata();
             keepOnlyLastEvent.setMaxCount(1L);
 
@@ -79,7 +76,6 @@ public final class ESDBCheckpointRepository implements ISubscriptionCheckpointRe
                         keepOnlyLastEvent
                 ).get();
 
-                // append event again expecting stream to not exist
                 eventStore.appendToStream(
                         streamName,
                         AppendToStreamOptions.get().expectedRevision(ExpectedRevision.noStream()),

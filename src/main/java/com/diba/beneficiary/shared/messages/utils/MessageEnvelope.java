@@ -13,7 +13,7 @@ public record MessageEnvelope<Event extends Message>(
 ) implements ResolvableTypeProvider {
 
     public static <Event extends Message> Optional<MessageEnvelope<Event>> of(final Class<Event> type
-                                , ResolvedEvent resolvedEvent) {
+            , ResolvedEvent resolvedEvent) {
         if (type == null)
             return Optional.empty();
 
@@ -29,7 +29,7 @@ public record MessageEnvelope<Event extends Message>(
                                 resolvedEvent.getEvent().getEventId().toString(),
                                 resolvedEvent.getEvent().getPosition().getCommitUnsigned(),
                                 resolvedEvent.getEvent().getEventType(),
-                                resolvedEvent.getEvent().getRevision() ,
+                                resolvedEvent.getEvent().getRevision(),
                                 resolvedEvent.getEvent().getStreamId()
                         )
                 )

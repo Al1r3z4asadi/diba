@@ -17,33 +17,59 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
     protected BeneficiaryInfoProjection(ReactiveMongoRepository<BeneficiaryInfo, String> repository) {
         super(repository);
     }
+
     @EventListener
     void handleBeneficiaryWasCreated(MessageEnvelope<BeneficiaryEvents.BeneficiaryCreated> create) {
-        var data = create.data() ;
-        add(create, () ->
-                new BeneficiaryInfo(data.id().toString() , data.businessCode(),
-                        data.beneficiaryName() , data.beneficiaryNameEn() ,
-                        data.beneficiaryRoles() , data.beneficiaryType(), create.metadata().streamPosition() ,
-                        create.metadata().logPosition())
-        );
+        var data = create.data();
+        add(create, () -> new BeneficiaryInfo(
+                data.id().toString(),
+                data.businessCode(),
+                data.beneficiaryName(),
+                data.beneficiaryNameEn(),
+                data.beneficiaryRoles(),
+                data.beneficiaryType(),
+                data.status(),
+                data.inactivityStartDate(),
+                data.inactivityEndDate(),
+                data.nationality(),
+                data.admissionDate(),
+                data.bourseCode(),
+                data.tradeCode(),
+                data.igmcCode(),
+                data.billCode(),
+                data.address(),
+                data.postalCode(),
+                data.phoneNumber(),
+                data.faxNumber(),
+                data.deputyName(),
+                data.deputyFamilyName(),
+                data.deputyPhoneNumber(),
+                data.step(),
+                data.whiteLists(),
+                data.brokers(),
+                data.suppliers(),
+                data.products(),
+                create.metadata().streamPosition(),
+                create.metadata().logPosition()
+        ));
     }
 
     @EventListener
     void handleBeneficiaryWasUpdated(MessageEnvelope<BeneficiaryEvents.BeneficiaryUpdated> update) {
         var data = update.data();
         int id_size = update.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length() ;
+        int uuidSize = UUID.randomUUID().toString().length();
         var streamId = update.metadata().StreamId().substring(id_size - uuidSize);
         getAndUpdate(streamId, update,
                 view -> view.updateBeneficiary(data)
-                );
+        );
     }
 
     @EventListener
     void handleBeneficiaryStatusChanged(MessageEnvelope<BeneficiaryEvents.BeneficiaryStatusChanged> statusChanged) {
         var data = statusChanged.data();
         int id_size = statusChanged.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length() ;
+        int uuidSize = UUID.randomUUID().toString().length();
         var streamId = statusChanged.metadata().StreamId().substring(id_size - uuidSize);
         getAndUpdate(streamId, statusChanged,
                 view -> view.changeStatus(data)

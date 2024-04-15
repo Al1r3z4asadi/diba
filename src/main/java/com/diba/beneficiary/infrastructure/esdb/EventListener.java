@@ -16,6 +16,7 @@ public class EventListener implements SmartLifecycle {
     private EventStoreDBSubscriptionToAll subscription;
 
     private final Logger logger = LoggerFactory.getLogger(EventListener.class);
+
     public EventListener(
             EventStoreDBClient eventStore,
             ISubscriptionCheckpointRepository subscriptionCheckpointRepository,
@@ -31,9 +32,9 @@ public class EventListener implements SmartLifecycle {
         try {
             subscription = new EventStoreDBSubscriptionToAll(
                     this.eventStore,
-                    this.eventBus ,
+                    this.eventBus,
                     this.subscriptionCheckpointRepository
-                    );
+            );
             subscription.subscribeToAll();
         } catch (Throwable e) {
             logger.error("Failed to start Subscription to All", e);
@@ -42,7 +43,8 @@ public class EventListener implements SmartLifecycle {
 
     @Override
     public void stop() {
-        stop(() -> {});
+        stop(() -> {
+        });
     }
 
     @Override

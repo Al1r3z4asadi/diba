@@ -16,10 +16,6 @@ public class BeneficiaryConfig {
     @Bean
     @ApplicationScope
     EventStoreRepository<Beneficiary, BeneficiaryEvents, UUID> beneficiaryStore(EventStoreDBClient eventStore) {
-        return new EventStoreRepository<>(
-                eventStore,
-                Beneficiary::mapToStreamId,
-                Beneficiary::empty
-        );
+        return new EventStoreRepository<>(eventStore, Beneficiary::mapToStreamId, Beneficiary::empty);
     }
 }

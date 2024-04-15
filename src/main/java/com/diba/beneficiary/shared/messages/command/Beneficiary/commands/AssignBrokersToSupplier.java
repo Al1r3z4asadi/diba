@@ -8,24 +8,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class AssignBrokersToSupplier extends BeneficiaryCommands{
-    private String beneficiaryId  ;
+public class AssignBrokersToSupplier extends BeneficiaryCommands {
+    private String beneficiaryId;
     private List<SupplierBroker> ids = new ArrayList<>();
-    private long expectedVersion ;
+    private long expectedVersion;
 
-
-
-    public AssignBrokersToSupplier(){
+    public AssignBrokersToSupplier() {
 
     }
 
-    public AssignBrokersToSupplier(String beneficiaryId , List<UUID> brokerIds ,
-        long expectedVersion){
+    public AssignBrokersToSupplier(String beneficiaryId, List<UUID> brokerIds,
+                                   long expectedVersion) {
         super();
-        this.beneficiaryId = beneficiaryId ;
-        for(int i = 0 ; i < brokerIds.size() ; i++){
-            ids.add(new SupplierBroker(this.beneficiaryId , brokerIds.get(i)));
+        this.beneficiaryId = beneficiaryId;
+        for (int i = 0; i < brokerIds.size(); i++) {
+            ids.add(new SupplierBroker(this.beneficiaryId, brokerIds.get(i)));
         }
-        this.expectedVersion = expectedVersion ;
+        this.expectedVersion = expectedVersion;
     }
 }

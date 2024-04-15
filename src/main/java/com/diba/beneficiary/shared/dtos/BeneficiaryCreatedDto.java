@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BeneficiaryCreatedDto {
-    public BeneficiaryCreatedDto(String beneficiaryId , ETag e){
-        this.beneficiaryId = beneficiaryId  ;
-        this.etag = e ;
+    public BeneficiaryCreatedDto(String beneficiaryId, ETag e) {
+        this.beneficiaryId = beneficiaryId;
+        this.etag = e;
     }
 
-    private String beneficiaryId ;
-    private ETag etag ;
+    private String beneficiaryId;
+    private ETag etag;
 }

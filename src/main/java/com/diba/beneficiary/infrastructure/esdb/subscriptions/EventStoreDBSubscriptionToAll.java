@@ -44,7 +44,7 @@ public class EventStoreDBSubscriptionToAll {
 
     public EventStoreDBSubscriptionToAll(
             EventStoreDBClient eventStoreClient,
-            IEventBus eventBus ,
+            IEventBus eventBus,
             ISubscriptionCheckpointRepository checkpointRepository
     ) {
         this.eventStoreClient = eventStoreClient;
@@ -53,7 +53,8 @@ public class EventStoreDBSubscriptionToAll {
     }
 
     public void subscribeToAll() {
-        subscribeToAll(ESSubscriptionOption.getDefault());;
+        subscribeToAll(ESSubscriptionOption.getDefault());
+        ;
     }
 
     void subscribeToAll(ESSubscriptionOption subscriptionOptions) {
@@ -73,7 +74,7 @@ public class EventStoreDBSubscriptionToAll {
 
                 logger.info("Subscribing to all '%s'".formatted(subscriptionOptions.subscriptionId()));
                 subscription = eventStoreClient.subscribeToAll(
-                        listener  ,
+                        listener,
                         subscriptionOptions.subscribeToAllOptions()
                 ).get();
                 return null;

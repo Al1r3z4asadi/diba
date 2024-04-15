@@ -8,20 +8,20 @@ import java.util.List;
 
 @Data
 public class UpdateBeneficiaryDto {
-    private String iid ;
-    private String businessCode ;
-    private String beneficiaryNameEn ;
-    private String beneficiaryName ;
-    private List<BeneficiaryRole> beneficiaryRoles ;
-    private BeneficiaryType beneficiaryType ;
+    private String iid;
+    private String businessCode;
+    private String beneficiaryNameEn;
+    private String beneficiaryName;
+    private List<BeneficiaryRole> beneficiaryRoles;
+    private BeneficiaryType beneficiaryType;
 
-    public UpdateBeneficiaryDto(String iid  , String businessCode, String beneficiaryNameEn, String beneficiaryName,
-                     List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType type) {
-        this.iid = iid ;
-        this.businessCode = businessCode ;
-        this.beneficiaryName = beneficiaryName ;
-        this.beneficiaryNameEn = beneficiaryNameEn ;
-        this.beneficiaryRoles = beneficiaryRoles ;
-        this.beneficiaryType = type ;
+    public UpdateBeneficiaryDto(String iid, String businessCode, String beneficiaryNameEn, String beneficiaryName,
+                                List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType type) {
+        this.iid = iid;
+        this.businessCode = businessCode;
+        this.beneficiaryName = beneficiaryName;
+        this.beneficiaryNameEn = beneficiaryNameEn;
+        this.beneficiaryRoles = beneficiaryRoles;
+        this.beneficiaryType = type;
     }
 }

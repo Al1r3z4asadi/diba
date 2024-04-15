@@ -15,7 +15,6 @@ public class appconfig {
         return MessageSerializer.mapper;
     }
 
-
     @Bean
     EventBus eventBus(ApplicationEventPublisher applicationEventPublisher) {
         return new EventBus(applicationEventPublisher);

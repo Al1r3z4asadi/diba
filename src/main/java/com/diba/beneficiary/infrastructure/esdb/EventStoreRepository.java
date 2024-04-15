@@ -16,10 +16,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-
-public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>, Event extends IEvent, Id>
-    implements IEventStoreDBRepository<Entity , Id>
-{
+public class EventStoreRepository<Entity extends AbstractAggregate<Event, Id>, Event extends IEvent, Id>
+        implements IEventStoreDBRepository<Entity, Id> {
 
     private final EventStoreDBClient eventStore;
     private final Function<Id, String> mapToStreamId;
@@ -35,27 +33,26 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
         this.mapToStreamId = mapToStreamId;
         this.getEmpty = getEmpty;
     }
+
     public CompletableFuture<Entity> Find(UUID id) {
         return null;
     }
-
 
     public ETag Add(Entity aggregate) {
 
         return appendEvents(
                 aggregate,
                 AppendToStreamOptions.get().expectedRevision(ExpectedRevision.noStream())
-        );    }
+        );
+    }
 
     public CompletableFuture<BigInteger> Update(Entity aggregate, BigInteger expectedRevision) {
         return null;
     }
 
-
     public CompletableFuture<BigInteger> Delete(Entity aggregate, BigInteger expectedRevision) {
         return null;
     }
-
 
     public Optional<Entity> get(Id id) throws Exception {
         String streamId = mapToStreamId.apply(id);
@@ -71,9 +68,8 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
         return Optional.ofNullable(current);
     }
 
-
     public ETag appendEvents(Entity entity, AppendToStreamOptions appendOptions) {
-        var streamId =  mapToStreamId.apply(entity.id());
+        var streamId = mapToStreamId.apply(entity.id());
         var events = Arrays.stream(entity.dequeueUncommittedEvents())
                 .map(MessageSerializer::serialize);
 
@@ -90,9 +86,8 @@ public class EventStoreRepository <Entity extends AbstractAggregate<Event , Id>,
         }
     }
 
-
     public ETag getAndUpdate(Consumer<Entity> handle, Id id, long expectedRevision) throws Exception {
-        var streamId =  mapToStreamId.apply(id);
+        var streamId = mapToStreamId.apply(id);
         var entity = get(id).orElseThrow(
                 () -> new RuntimeException("Stream with id %s was not found".formatted(streamId))
         );

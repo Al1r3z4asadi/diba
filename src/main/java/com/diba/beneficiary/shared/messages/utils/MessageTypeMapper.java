@@ -1,6 +1,5 @@
 package com.diba.beneficiary.shared.messages.utils;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +22,8 @@ public final class MessageTypeMapper {
                 eventTypeName,
                 c -> {
                     try {
-                        var className = Class.forName(eventTypeName.replace("__", "$").replace("_", ".").replace("class", "").trim());
+                        var className = Class.forName(eventTypeName.replace("__", "$").replace("_", ".").replace(
+                                "class", "").trim());
                         return Optional.of(className);
                     } catch (ClassNotFoundException e) {
                         return Optional.empty();

@@ -5,6 +5,6 @@ import java.time.OffsetDateTime;
 public record CheckpointStored(
         String subscriptionId,
         long position,
-        OffsetDateTime checkpointedAt
+        OffsetDateTime checkPointedAt
 ) {
 }

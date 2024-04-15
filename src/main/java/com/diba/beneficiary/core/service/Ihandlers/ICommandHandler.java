@@ -3,7 +3,6 @@ package com.diba.beneficiary.core.service.Ihandlers;
 import com.diba.beneficiary.shared.messages.command.Command;
 import com.diba.beneficiary.shared.ServiceResult;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface ICommandHandler<R> {

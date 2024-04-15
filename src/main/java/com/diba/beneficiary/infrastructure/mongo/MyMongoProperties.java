@@ -20,6 +20,7 @@ public class MyMongoProperties {
     @NotNull
     private MongoProperties local;
 
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private String uri;
 }

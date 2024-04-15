@@ -6,9 +6,7 @@ import java.util.UUID;
 
 public class ReportCommands extends Query {
 
-
-
-    public ReportCommands(){
+    public ReportCommands() {
         setId(UUID.randomUUID());
     }
 

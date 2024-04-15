@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class QueryHandler<T extends Query , R extends VersionedView> implements IQueryHandler {
-    private final ReportRepository _reportRepository ;
+public class QueryHandler<T extends Query, R extends VersionedView> implements IQueryHandler {
+    private final ReportRepository _reportRepository;
     private final Map<Class<?>, ICoreQueryHandler> handlers;
 
     public QueryHandler(ReportRepository reportRepository) {
         this._reportRepository = reportRepository;
         this.handlers = new HashMap<>();
-        this.registerQueryHandlers(this._reportRepository) ;
+        this.registerQueryHandlers(this._reportRepository);
 
     }
 
@@ -36,7 +36,8 @@ public class QueryHandler<T extends Query , R extends VersionedView> implements 
     }
 
     private void registerQueryHandlers(ReportRepository _reportRepository) {
-        handlers.put(GetBeneficiaries.class, new GetAllBeneficiaryQueryHandler((BeneficiaryReportRepository) _reportRepository));
+        handlers.put(GetBeneficiaries.class,
+                new GetAllBeneficiaryQueryHandler((BeneficiaryReportRepository) _reportRepository));
 
     }
 }

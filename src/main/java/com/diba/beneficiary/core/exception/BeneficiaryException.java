@@ -3,8 +3,7 @@ package com.diba.beneficiary.core.exception;
 public class BeneficiaryException extends Exception {
     private String errorCode;
 
-    public BeneficiaryException(String message, String errorCode, Exception innerException)
-    {
+    public BeneficiaryException(String message, String errorCode, Exception innerException) {
         super(message);
         this.errorCode = errorCode;
     }
@@ -14,9 +13,7 @@ public class BeneficiaryException extends Exception {
         this.errorCode = errorCode;
     }
 
-
-    public BeneficiaryException(String message)
-    {
+    public BeneficiaryException(String message) {
         this(message, ErrorCodes.INVALID_OPERATION.getCode(), null);
     }
 

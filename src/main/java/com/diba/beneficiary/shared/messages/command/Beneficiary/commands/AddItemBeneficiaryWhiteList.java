@@ -5,19 +5,20 @@ import lombok.Data;
 
 @Data
 public class AddItemBeneficiaryWhiteList extends BeneficiaryCommands {
-    private String beneficiaryId  ;
+    private String beneficiaryId;
     private String ip;
-    private IpType ipType ;
-    private long expectedVersion ;
+    private IpType ipType;
+    private long expectedVersion;
 
-    public AddItemBeneficiaryWhiteList(){
+    public AddItemBeneficiaryWhiteList() {
 
     }
-    public AddItemBeneficiaryWhiteList(String beneficiaryId , String ip ,
-                                       IpType ipType , long expectedVersion){
-        this.beneficiaryId = beneficiaryId ;
-        this.ip = ip ;
-        this.ipType = ipType ;
-        this.expectedVersion = expectedVersion ;
+
+    public AddItemBeneficiaryWhiteList(String beneficiaryId, String ip,
+                                       IpType ipType, long expectedVersion) {
+        this.beneficiaryId = beneficiaryId;
+        this.ip = ip;
+        this.ipType = ipType;
+        this.expectedVersion = expectedVersion;
     }
 }
