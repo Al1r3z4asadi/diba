@@ -7,10 +7,10 @@ import org.springframework.data.domain.Sort;
 @Data
 @NoArgsConstructor
 public class GetWhiteListByBeneficiaryId extends PagedReportCommands{
-    private String beneficairyId;
+    private String beneficiaryId;
     public GetWhiteListByBeneficiaryId(String beneficiaryId, int page, int size, String sortField,
                                        Sort.Direction sortOrder) {
         super(page , size , sortField , sortOrder);
-        this.beneficairyId = beneficiaryId ;
+        this.beneficiaryId = beneficiaryId ;
     }
 }

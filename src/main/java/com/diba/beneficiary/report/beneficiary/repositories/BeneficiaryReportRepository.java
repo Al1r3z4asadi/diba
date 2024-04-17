@@ -6,6 +6,7 @@ import com.diba.beneficiary.report.beneficiary.views.BeneficiaryInfo;
 import com.diba.beneficiary.shared.dtos.report.BeneficiaryWhiteListReportDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.queries.GetBeneficiaries;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.queries.GetWhiteListByBeneficiaryId;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,7 +43,7 @@ public class BeneficiaryReportRepository extends ReportRepository<BeneficiaryInf
 
     public Flux<BeneficiaryWhiteListReportDto> getIpWhiteListReport(GetWhiteListByBeneficiaryId id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
+        query.addCriteria(Criteria.where("_id").is(id.getBeneficiaryId()));
         int skip = (id.getPage() - 1) * id.getSize();
         query.skip(skip).limit(id.getSize());
 

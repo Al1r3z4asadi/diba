@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 @Data
 public class IpWhiteList {
-    private UUID beneficiaryId;
+    private String beneficiaryId;
     private String ipAddress;
     private IpType ipType;
     @JsonIgnore
