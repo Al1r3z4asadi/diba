@@ -3,7 +3,9 @@ package com.diba.beneficiary.report.beneficiary.repositories;
 import com.diba.beneficiary.infrastructure.mongo.MONGOConfig;
 import com.diba.beneficiary.report.ReportRepository;
 import com.diba.beneficiary.report.beneficiary.views.BeneficiaryInfo;
+import com.diba.beneficiary.shared.dtos.report.BeneficiaryWhiteListReportDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.queries.GetBeneficiaries;
+import com.diba.beneficiary.shared.messages.command.Beneficiary.queries.GetWhiteListByBeneficiaryId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,21 @@ public class BeneficiaryReportRepository extends ReportRepository<BeneficiaryInf
         Sort sort = Sort.by(benes.getSortOrder(), benes.getSortField());
         query.with(sort);
         return applyPagination(query, BeneficiaryInfo.class);
+    }
+
+    public Flux<BeneficiaryWhiteListReportDto> getIpWhiteListReport(GetWhiteListByBeneficiaryId id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(id));
+        int skip = (id.getPage() - 1) * id.getSize();
+        query.skip(skip).limit(id.getSize());
+
+        return applyPagination(query, BeneficiaryInfo.class).flatMap(beneficiaryInfo -> Flux.fromIterable(beneficiaryInfo.getWhiteLists())
+                .map(ipWhiteList -> new BeneficiaryWhiteListReportDto(
+                        beneficiaryInfo.getId(),
+                        ipWhiteList.getIpAddress(),
+                        ipWhiteList.getIpType()
+                ))
+        );
     }
 
 }

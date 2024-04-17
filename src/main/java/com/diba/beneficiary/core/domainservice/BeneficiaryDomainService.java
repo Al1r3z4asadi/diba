@@ -52,7 +52,7 @@ public class BeneficiaryDomainService {
                         data.getFaxNumber(), data.getDeputyName(), data.getDeputyFamilyName(),
                         data.getDeputyPhoneNumber(), BeneficiaryStatus.NEW, data.getStep(), new ArrayList<>(),
                         new ArrayList<>(),
-                        new ArrayList<>(), new ArrayList<>(), new UserMetadata(data.getId().toString(), ""));
+                        new ArrayList<>(), data.getProducts(), new UserMetadata(data.getId().toString(), ""));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

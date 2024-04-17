@@ -4,12 +4,9 @@ import com.diba.beneficiary.core.models.Beneficiary.BeneficiaryProduct;
 import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
 import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
-import com.diba.beneficiary.shared.dtos.BrokerDto;
+import com.diba.beneficiary.shared.dtos.report.BrokerDto;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

@@ -2,7 +2,7 @@ package com.diba.beneficiary.core.models.Beneficiary;
 
 import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
-import com.diba.beneficiary.shared.dtos.BrokerDto;
+import com.diba.beneficiary.shared.dtos.report.BrokerDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
@@ -11,7 +11,6 @@ import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
@@ -249,8 +248,9 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 //                .map(broker -> new SupplierBroker(addedBroker.id().toString(), broker.getBroker().getBrokerId()))
 //                .collect(Collectors.toList());    }
     }
-    private void apply(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList ItemAddedToWhiteList) {
-        //TODO: apply event
+    private void apply(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList ItemAddedToWhiteList) throws BeneficiaryException {
+        this.whiteLists.add(new IpWhiteList( ItemAddedToWhiteList.ip() ,
+                ItemAddedToWhiteList.ipType()));
     }
 
     private void apply(BeneficiaryEvents.BeneficiaryRemoved removed) {

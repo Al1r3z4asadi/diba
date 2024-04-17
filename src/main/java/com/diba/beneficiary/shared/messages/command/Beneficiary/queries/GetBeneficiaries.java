@@ -5,12 +5,15 @@ import lombok.Data;
 import org.springframework.data.domain.Sort;
 
 @Data
-@AllArgsConstructor
-public class GetBeneficiaries extends ReportCommands{
+public class GetBeneficiaries extends PagedReportCommands {
     private String businessCode;
-    private String beneficiaryNameEn ;
-    private int page ;
-    private int size ;
-    private String sortField ;
-    private Sort.Direction sortOrder ;
+    private String beneficiaryNameEn;
+
+    public GetBeneficiaries(String businessCode, String beneficiaryNameEn, int page, int size, String sortField,
+                            Sort.Direction direction){
+        super(page , size , sortField , direction);
+        this.businessCode = businessCode ;
+        this.beneficiaryNameEn = beneficiaryNameEn ;
+
+    }
 }

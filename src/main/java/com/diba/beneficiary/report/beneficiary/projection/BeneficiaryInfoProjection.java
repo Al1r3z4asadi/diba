@@ -86,4 +86,15 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
                 view -> view.assignBroker(data)
         );
     }
+
+    @EventListener
+    void handleItemBeneficiaryAddedtoWhiteList(MessageEnvelope<BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList> whiteList) {
+        var data = whiteList.data();
+        int id_size = whiteList.metadata().StreamId().length();
+        int uuidSize = UUID.randomUUID().toString().length() ;
+        var streamId = whiteList.metadata().StreamId().substring(id_size - uuidSize);
+        getAndUpdate(streamId, whiteList,
+                view -> view.addBeneficiaryToWhiteList(data)
+        );
+    }
 }

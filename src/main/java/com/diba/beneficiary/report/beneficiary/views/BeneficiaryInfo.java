@@ -1,5 +1,6 @@
 package com.diba.beneficiary.report.beneficiary.views;
 
+import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.BeneficiaryProduct;
 import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
 import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
@@ -117,6 +118,11 @@ public class BeneficiaryInfo implements VersionedView {
             this.brokers.add(new SupplierBroker(brokerDto.getBeneficiaryId(), brokerDto.getBrokerId()));
         });
         return this;
+    }
+
+    public BeneficiaryInfo addBeneficiaryToWhiteList(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList whiteList)  {
+        this.whiteLists.add(IpWhiteList.createIPWhiteList(whiteList.ip() , whiteList.ipType()));
+        return this ;
     }
 
     @Override

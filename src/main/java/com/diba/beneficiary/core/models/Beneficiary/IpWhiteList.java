@@ -3,6 +3,7 @@ package com.diba.beneficiary.core.models.Beneficiary;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.core.models.Beneficiary.enums.IpType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.UUID;
@@ -14,19 +15,24 @@ public class IpWhiteList {
     private UUID beneficiaryId;
     private String ipAddress;
     private IpType ipType;
-
-    private final String IP_PATTERN =
+    @JsonIgnore
+    private String IP_PATTERN =
             "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
 
-    private final Pattern pattern = Pattern.compile(IP_PATTERN);
 
     private boolean validateIP(String ipAddress) {
+
+        Pattern pattern = Pattern.compile(IP_PATTERN);
+
         Matcher matcher = pattern.matcher(ipAddress);
         return matcher.matches();
     }
 
-    public IpWhiteList(String beneficiaryId, String ipAddress, IpType ipType) throws BeneficiaryException {
-        this.beneficiaryId = UUID.fromString(beneficiaryId);
+    private IpWhiteList(){
+
+    }
+
+    public IpWhiteList(String ipAddress, IpType ipType) throws BeneficiaryException {
         if (validateIP(ipAddress)) {
             this.ipAddress = ipAddress;
         } else {
@@ -34,6 +40,13 @@ public class IpWhiteList {
                     ErrorCodes.INVALID_IP_ADDRESS.getCode());
         }
         this.ipType = ipType;
+    }
+
+    public static IpWhiteList createIPWhiteList(String ipAddress, IpType ipType){
+        IpWhiteList whiteList = new IpWhiteList();
+        whiteList.setIpAddress(ipAddress);
+        whiteList.setIpType(ipType);
+        return whiteList ;
     }
 
 }

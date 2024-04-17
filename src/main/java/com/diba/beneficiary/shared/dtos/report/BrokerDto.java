@@ -1,4 +1,4 @@
-package com.diba.beneficiary.shared.dtos;
+package com.diba.beneficiary.shared.dtos.report;
 
 import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
