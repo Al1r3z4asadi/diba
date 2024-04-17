@@ -5,7 +5,6 @@ import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.core.http.ETag;
 import com.diba.beneficiary.core.models.Beneficiary.Beneficiary;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
-import com.diba.beneficiary.core.models.Beneficiary.enums.NationalityType;
 import com.diba.beneficiary.infrastructure.esdb.IEventStoreDBRepository;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryModel;

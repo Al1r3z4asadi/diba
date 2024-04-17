@@ -22,7 +22,7 @@ public class AssignBrokersToSupplier extends BeneficiaryCommands {
         super();
         this.beneficiaryId = beneficiaryId;
         for (int i = 0; i < brokerIds.size(); i++) {
-            ids.add(new SupplierBroker(this.beneficiaryId, brokerIds.get(i)));
+            ids.add(new SupplierBroker(this.beneficiaryId, brokerIds.get(i).toString()));
         }
         this.expectedVersion = expectedVersion;
     }

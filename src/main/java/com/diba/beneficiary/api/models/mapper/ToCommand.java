@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ToCommand {
     public static CreateOne ToCreateOne(BeneficiaryRequests.CreateOne addRequest) {
-        return new CreateOne(addRequest.businessCode(), addRequest.beneficiaryNameEn(), addRequest.beneficiaryName(),
+        return new CreateOne( addRequest.beneficiaryName(), addRequest.beneficiaryNameEn(),addRequest.businessCode(),
                 ToCommand.convertRoles(addRequest.beneficiaryRoles()),
                 ToCommand.toTypeEnum(addRequest.beneficiaryType()),
                 ToCommand.toNationalityType(addRequest.nationality()), addRequest.inactivityStartDate(),

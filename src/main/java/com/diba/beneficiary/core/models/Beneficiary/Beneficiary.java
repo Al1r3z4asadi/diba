@@ -2,6 +2,7 @@ package com.diba.beneficiary.core.models.Beneficiary;
 
 import com.diba.beneficiary.core.models.AbstractAggregate;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
+import com.diba.beneficiary.shared.dtos.BrokerDto;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
 import com.diba.beneficiary.shared.messages.events.BeneficiaryEvents;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
@@ -10,6 +11,7 @@ import com.diba.beneficiary.shared.messages.utils.UserMetadata;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
@@ -91,13 +93,14 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
 
     public void AssignBrokers(AssignBrokersToSupplier assign) {
         UserMetadata metadata = new UserMetadata(assign.getId().toString(), assign.getBeneficiaryId());
-        Map<UUID, SupplierBroker> brokerIds = new HashMap<>();
+        List<BrokerDto> brokerIds = new ArrayList<>();
         for (var item : assign.getIds()) {
-            brokerIds.put(UUID.randomUUID(), item);
+            brokerIds.add(new BrokerDto(UUID.randomUUID().toString(),
+                    item.getBeneficiaryId().toString() ,item.getBrokerId()));
         }
         try {
             enqueue(new BeneficiaryEvents.BrokersWasAssignedToSupplier(
-                    UUID.randomUUID(), brokerIds, metadata));
+                    UUID.randomUUID(),brokerIds ,   metadata));
         } catch (Exception e) {
             // log exception if not sth happend
         }
@@ -242,9 +245,10 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     }
 
     private void apply(BeneficiaryEvents.BrokersWasAssignedToSupplier addedBroker) {
-        this.brokers = addedBroker.brokerIds().values().stream().toList();
+//        this.brokers = addedBroker.brokers().stream()
+//                .map(broker -> new SupplierBroker(addedBroker.id().toString(), broker.getBroker().getBrokerId()))
+//                .collect(Collectors.toList());    }
     }
-
     private void apply(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList ItemAddedToWhiteList) {
         //TODO: apply event
     }

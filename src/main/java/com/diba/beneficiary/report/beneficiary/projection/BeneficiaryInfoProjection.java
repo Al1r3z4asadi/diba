@@ -76,14 +76,14 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
         );
     }
 
-//    @EventListener
-//    void handleBeneficiaryStatusChanged(MessageEnvelope<BeneficiaryEvents.BrokersWasAssignedToSupplier> assigned) {
-//        var data = assigned.data();
-//        int id_size = assigned.metadata().StreamId().length();
-//        int uuidSize = UUID.randomUUID().toString().length() ;
-//        var streamId = assigned.metadata().StreamId().substring(id_size - uuidSize);
-//        getAndUpdate(streamId, assigned,
-//                view -> view.changeStatus(data)
-//        );
-//    }
+    @EventListener
+    void handleBrokersWasAssignedToSupplier(MessageEnvelope<BeneficiaryEvents.BrokersWasAssignedToSupplier> assigned) {
+        var data = assigned.data();
+        int id_size = assigned.metadata().StreamId().length();
+        int uuidSize = UUID.randomUUID().toString().length() ;
+        var streamId = assigned.metadata().StreamId().substring(id_size - uuidSize);
+        getAndUpdate(streamId, assigned,
+                view -> view.assignBroker(data)
+        );
+    }
 }

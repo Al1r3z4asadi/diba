@@ -4,14 +4,17 @@ import com.diba.beneficiary.core.models.Beneficiary.BeneficiaryProduct;
 import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
 import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
+import com.diba.beneficiary.shared.dtos.BrokerDto;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-public interface BeneficiaryEvents extends IEvent {
+public interface BeneficiaryEvents extends IEvent  {
     record BeneficiaryCreated(UUID id, String businessCode, String beneficiaryNameEn, String beneficiaryName,
                               List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType beneficiaryType,
                               UserMetadata metadata, BeneficiaryStatus status, LocalDateTime inactivityStartDate,
@@ -34,11 +37,12 @@ public interface BeneficiaryEvents extends IEvent {
                                     UserMetadata metadata) implements BeneficiaryEvents {
     }
 
+
     record BrokersWasAssignedToSupplier(
 
             UUID id,
 
-            Map<UUID, SupplierBroker> brokerIds,
+            List<BrokerDto> brokers,
 
             UserMetadata metadata) implements BeneficiaryEvents {
     }

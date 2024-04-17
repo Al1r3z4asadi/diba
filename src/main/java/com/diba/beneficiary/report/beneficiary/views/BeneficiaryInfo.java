@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Document(collection = "BeneficiaryInfo")
 @Data
@@ -45,8 +46,7 @@ public class BeneficiaryInfo implements VersionedView {
     private String deputyPhoneNumber;
     private BeneficiaryStep step;
     private List<IpWhiteList> whiteLists = new ArrayList<>();
-    private List<SupplierBroker> brokers;
-    private List<SupplierBroker> suppliers;
+    private List<SupplierBroker> brokers = new ArrayList<>();
     private List<BeneficiaryProduct> products;
 
     private long version;
@@ -91,7 +91,6 @@ public class BeneficiaryInfo implements VersionedView {
         this.step = step;
         this.whiteLists = whiteLists;
         this.brokers = brokers;
-        this.suppliers = suppliers;
         this.products = products;
         this.lastProcessedPosition = lastProcessedPosition;
         this.version = version;
@@ -113,8 +112,10 @@ public class BeneficiaryInfo implements VersionedView {
         return this;
     }
 
-    public BeneficiaryInfo assignStatus(BeneficiaryEvents.BrokersWasAssignedToSupplier assigned) {
-
+    public BeneficiaryInfo assignBroker(BeneficiaryEvents.BrokersWasAssignedToSupplier assigned) {
+        assigned.brokers().stream().forEach(brokerDto -> {
+            this.brokers.add(new SupplierBroker(brokerDto.getBeneficiaryId(), brokerDto.getBrokerId()));
+        });
         return this;
     }
 
