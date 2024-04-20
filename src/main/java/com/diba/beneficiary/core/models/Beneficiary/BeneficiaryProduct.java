@@ -11,7 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BeneficiaryProduct {
-    private String id;
     private String beneficiaryId;
     private String productId;
     private LocalDateTime insertionDate;

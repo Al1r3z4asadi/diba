@@ -131,6 +131,11 @@ public class BeneficiaryInfo implements VersionedView {
         return this;
     }
 
+    public BeneficiaryInfo addProduct(BeneficiaryEvents.ProductWasAddedToBeneficiary event) {
+        this.products.add(new BeneficiaryProduct(event.beneficairyId() , event.productId() , event.insertionDate() , event.admissionDate()));
+        return this;
+    }
+
     @Override
     public long getLastProcessedPosition() {
         return lastProcessedPosition;
@@ -149,5 +154,6 @@ public class BeneficiaryInfo implements VersionedView {
     public void setVersion(long version) {
         this.version = version;
     }
+
 
 }

@@ -100,6 +100,14 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
         deleteById(streamId, removed);
     }
 
+    @EventListener
+    void handleProductWasAddedToBeneficiary(MessageEnvelope<BeneficiaryEvents.ProductWasAddedToBeneficiary> addedProduct) {
+        String streamId = getStreamId(addedProduct);
+        getAndUpdate(streamId, addedProduct,
+                view -> view.addProduct(addedProduct.data())
+        );
+    }
+
     private String getStreamId(MessageEnvelope<?> event) {
         int id_size = event.metadata().StreamId().length();
         int uuidSize = UUID.randomUUID().toString().length();

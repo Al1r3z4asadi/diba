@@ -4,7 +4,9 @@ import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -81,6 +83,16 @@ public class ToCommand {
                                                                            String whiteListId,
                                                                            Long version) {
         BeneficiaryCommands command = new DeleteItemFromBeneficiaryWhiteList(beneficiaryId.toString() , whiteListId, version);
+        return command;
+    }
+
+    public static BeneficiaryCommands toAddProductToBeneficiary(UUID beneficiaryId
+            , UUID productId
+            , LocalDateTime insertionDate
+            , LocalDateTime admissionDate
+            , Long version) {
+        BeneficiaryCommands command = new AddProductToBeneficiary(beneficiaryId.toString()
+                ,productId.toString() , insertionDate , admissionDate, version);
         return command;
     }
 

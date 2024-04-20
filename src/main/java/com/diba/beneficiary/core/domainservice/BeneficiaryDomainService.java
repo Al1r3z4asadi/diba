@@ -170,6 +170,21 @@ public class BeneficiaryDomainService {
         return future;
     }
 
+    public CompletableFuture<ServiceResult<String>> addProductToBeneficiary(AddProductToBeneficiary addProduct) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        checkIfExistInLocalDB(addProduct.getBeneficiaryId().toString());
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(current -> current.addProduct(addProduct),
+                        UUID.fromString(addProduct.getBeneficiaryId()), addProduct.getExpectedVersion());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(addProduct.getBeneficiaryId()));
+        });
+        return future;
+    }
+
     //private
     private void checkIfNotExistInLocalDB(String bussinesCode) throws BeneficiaryException {
         var bene = _localRepo.findByBusinessCode(bussinesCode).block();

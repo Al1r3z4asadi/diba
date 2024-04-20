@@ -6,12 +6,13 @@ import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
 import com.diba.beneficiary.shared.dtos.report.BrokerDto;
 import com.diba.beneficiary.shared.messages.utils.UserMetadata;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface BeneficiaryEvents extends IEvent  {
+public interface BeneficiaryEvents extends IEvent {
     record BeneficiaryCreated(UUID id, String businessCode, String beneficiaryNameEn, String beneficiaryName,
                               List<BeneficiaryRole> beneficiaryRoles, BeneficiaryType beneficiaryType,
                               UserMetadata metadata, BeneficiaryStatus status, LocalDateTime inactivityStartDate,
@@ -34,7 +35,6 @@ public interface BeneficiaryEvents extends IEvent  {
                                     UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-
     record BrokersWasAssignedToSupplier(
 
             UUID id,
@@ -44,13 +44,19 @@ public interface BeneficiaryEvents extends IEvent  {
             UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-    record ItemBeneficiaryAddedToWhiteList(UUID id, String relationId , String ip, IpType ipType,
+    record ItemBeneficiaryAddedToWhiteList(UUID id, String relationId, String ip, IpType ipType,
                                            UserMetadata metaData) implements BeneficiaryEvents {
     }
 
     record BeneficiaryRemoved(UUID id, UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-    record ItemWasRemovedFromWhiteList(UUID id, String whiteListId,String beneficiaryId ,  UserMetadata metadata) implements BeneficiaryEvents {
+    record ItemWasRemovedFromWhiteList(UUID id, String whiteListId, String beneficiaryId,
+                                       UserMetadata metadata) implements BeneficiaryEvents {
+    }
+
+    record ProductWasAddedToBeneficiary(UUID id, String productId, String beneficairyId,
+                                        LocalDateTime insertionDate , LocalDateTime admissionDate
+                                        ,UserMetadata metadata) implements BeneficiaryEvents {
     }
 }

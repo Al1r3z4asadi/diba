@@ -78,4 +78,14 @@ public final class BeneficiaryRequests {
     ) {
     }
 
+    public  record  addproductToBeneficiary(
+            UUID beneficiaryId ,
+            UUID productId ,
+            LocalDateTime insertionDate ,
+            LocalDateTime admissionDate
+
+    ){
+
+    }
+
 }

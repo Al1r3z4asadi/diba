@@ -136,6 +136,16 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
             // log exception if not sth happend
         }
     }
+    public void addProduct(AddProductToBeneficiary addProduct) {
+        UserMetadata metadata = new UserMetadata(addProduct.getId().toString(), addProduct.getBeneficiaryId());
+        try {
+            enqueue(new BeneficiaryEvents.ProductWasAddedToBeneficiary(UUID.randomUUID(),
+                    addProduct.getProductId(), addProduct.getBeneficiaryId() ,addProduct.getInsertionDate() ,
+                    addProduct.getAdmissionDate() ,metadata));
+        } catch (Exception e) {
+            // log exception if not sth happend
+        }    }
+
 
     private Beneficiary(UUID id, String businessCode, String beneficiaryNameEn,
                         String beneficiaryName, List<BeneficiaryRole> beneficiaryRoles,
@@ -192,24 +202,37 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                     ErrorCodes.CAN_NOT_APPLY_TO_EMPTY_EVENT.getCode());
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryCreated) {
             apply((BeneficiaryEvents.BeneficiaryCreated) beneficiaryEvents);
+
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryUpdated) {
             apply((BeneficiaryEvents.BeneficiaryUpdated) beneficiaryEvents);
+
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryStatusChanged) {
             apply((BeneficiaryEvents.BeneficiaryStatusChanged) beneficiaryEvents);
+
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BrokersWasAssignedToSupplier) {
             apply((BeneficiaryEvents.BrokersWasAssignedToSupplier) beneficiaryEvents);
+
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList) {
             apply((BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList) beneficiaryEvents);
+
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryRemoved) {
             apply((BeneficiaryEvents.BeneficiaryRemoved) beneficiaryEvents);
+
         } else if((beneficiaryEvents instanceof  BeneficiaryEvents.ItemWasRemovedFromWhiteList)){
             apply((BeneficiaryEvents.ItemWasRemovedFromWhiteList) beneficiaryEvents);
+
+        } else if(beneficiaryEvents instanceof BeneficiaryEvents.ProductWasAddedToBeneficiary){
+            apply((BeneficiaryEvents.ProductWasAddedToBeneficiary) beneficiaryEvents);
         }
         else {
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
                     ErrorCodes.UNSUPPORTED_EVENT.getCode());
         }
 
+    }
+
+    private void apply(BeneficiaryEvents.ProductWasAddedToBeneficiary event) {
+        this.products.add(new BeneficiaryProduct(event.beneficairyId() , event.productId() , event.insertionDate() , event.admissionDate()));
     }
 
     public static Beneficiary empty() {
@@ -280,5 +303,6 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                     , ErrorCodes.STATUS_CAN_NOT_CHANGE.getCode());
         }
     }
+
 
 }
