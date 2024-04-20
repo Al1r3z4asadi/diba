@@ -56,45 +56,45 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
 
     @EventListener
     void handleBeneficiaryWasUpdated(MessageEnvelope<BeneficiaryEvents.BeneficiaryUpdated> update) {
-        var data = update.data();
-        int id_size = update.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length();
-        var streamId = update.metadata().StreamId().substring(id_size - uuidSize);
+        String streamId = getStreamId(update);
         getAndUpdate(streamId, update,
-                view -> view.updateBeneficiary(data)
+                view -> view.updateBeneficiary(update.data())
         );
     }
 
     @EventListener
     void handleBeneficiaryStatusChanged(MessageEnvelope<BeneficiaryEvents.BeneficiaryStatusChanged> statusChanged) {
-        var data = statusChanged.data();
-        int id_size = statusChanged.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length();
-        var streamId = statusChanged.metadata().StreamId().substring(id_size - uuidSize);
+        String streamId = getStreamId(statusChanged);
         getAndUpdate(streamId, statusChanged,
-                view -> view.changeStatus(data)
+                view -> view.changeStatus(statusChanged.data())
         );
     }
 
     @EventListener
     void handleBrokersWasAssignedToSupplier(MessageEnvelope<BeneficiaryEvents.BrokersWasAssignedToSupplier> assigned) {
-        var data = assigned.data();
-        int id_size = assigned.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length() ;
-        var streamId = assigned.metadata().StreamId().substring(id_size - uuidSize);
+        String streamId = getStreamId(assigned);
         getAndUpdate(streamId, assigned,
-                view -> view.assignBroker(data)
+                view -> view.assignBroker(assigned.data())
         );
     }
 
     @EventListener
-    void handleItemBeneficiaryAddedtoWhiteList(MessageEnvelope<BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList> whiteList) {
-        var data = whiteList.data();
-        int id_size = whiteList.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length() ;
-        var streamId = whiteList.metadata().StreamId().substring(id_size - uuidSize);
+    void handleItemBeneficiaryAddedToWhiteList(MessageEnvelope<BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList> whiteList) {
+        String streamId = getStreamId(whiteList);
         getAndUpdate(streamId, whiteList,
-                view -> view.addBeneficiaryToWhiteList(data)
+                view -> view.addBeneficiaryToWhiteList(whiteList.data())
         );
+    }
+
+    @EventListener
+    void handleBeneficiaryRemoved(MessageEnvelope<BeneficiaryEvents.BeneficiaryRemoved> removed) {
+        String streamId = getStreamId(removed);
+        deleteById(streamId,removed);
+    }
+
+    private String getStreamId(MessageEnvelope<?> event) {
+        int id_size = event.metadata().StreamId().length();
+        int uuidSize = UUID.randomUUID().toString().length() ;
+        return event.metadata().StreamId().substring(id_size - uuidSize);
     }
 }

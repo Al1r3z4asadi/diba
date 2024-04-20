@@ -124,6 +124,11 @@ public class BeneficiaryInfo implements VersionedView {
         this.whiteLists.add(IpWhiteList.createIPWhiteList(whiteList.ip() , whiteList.ipType()));
         return this ;
     }
+    public BeneficiaryInfo removeBeneficiary(BeneficiaryEvents.BeneficiaryRemoved remove){
+        this.status = BeneficiaryStatus.INACTIVE ;
+        return  this;
+    }
+
 
     @Override
     public long getLastProcessedPosition() {

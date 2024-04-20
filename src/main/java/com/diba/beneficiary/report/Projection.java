@@ -30,6 +30,27 @@ public abstract class Projection<View, Id> {
                                                        Function<View, View> handle
     ) {
         View view = repository.findById(viewId).block();
+        check(viewId, eventEnvelope, view);
+        var result = handle.apply(view);
+        if (result instanceof VersionedView versionedView) {
+            versionedView.setMetadata(eventEnvelope.metadata());
+        }
+        repository.save(result).subscribe();
+    }
+
+    protected <Event extends IEvent> void deleteById(Id viewId, MessageEnvelope<Event> eventEnvelope) {
+        View view = repository.findById(viewId).block();
+        check(viewId, eventEnvelope, view);
+        repository.deleteById(viewId).subscribe();
+    }
+
+    private static boolean wasAlreadyApplied(VersionedView view, MessageEnvelope<?> eventEnvelope) {
+        var lastPosition = view.getLastProcessedPosition();
+        var logPosition = eventEnvelope.metadata().streamPosition();
+        return lastPosition >= logPosition;
+    }
+
+    private <Event extends IEvent> void check(Id viewId, MessageEnvelope<Event> eventEnvelope, View view) {
         if (view == null) {
             logger.warn("View with id %s was not found for event %s".formatted(viewId,
                     eventEnvelope.metadata().eventType()));
@@ -38,18 +59,7 @@ public abstract class Projection<View, Id> {
         if (view instanceof VersionedView versionedView && wasAlreadyApplied(versionedView, eventEnvelope)) {
             logger.warn("View with id %s was already applied for event %s".formatted(viewId,
                     eventEnvelope.metadata().eventType()));
-            return;
         }
-        var result = handle.apply(view);
-        if (result instanceof VersionedView versionedView) {
-            versionedView.setMetadata(eventEnvelope.metadata());
-        }
-        repository.save(result).subscribe();
     }
 
-    private static boolean wasAlreadyApplied(VersionedView view, MessageEnvelope<?> eventEnvelope) {
-        var lastPosition = view.getLastProcessedPosition();
-        var logPosition = eventEnvelope.metadata().streamPosition();
-        return lastPosition >= logPosition;
-    }
 }
