@@ -28,8 +28,7 @@ public class BeneficiaryController {
     }
 
     @PostMapping("/add-one")
-    public Mono<ResponseEntity<Envelope>> addBeneficiary(@RequestBody BeneficiaryRequests.CreateOne addRequest
-    ) {
+    public Mono<ResponseEntity<Envelope>> addBeneficiary(@RequestBody BeneficiaryRequests.CreateOne addRequest) {
 
         BeneficiaryCommands command = ToCommand.ToCreateOne(addRequest);
         var result = (Mono<ServiceResult<BeneficiaryCreatedDto>>) _dispatcher.dispatch(command);
@@ -78,6 +77,58 @@ public class BeneficiaryController {
 
         return result.map(serviceResult -> {
             if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", serviceResult.getValue().get());
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
+
+    @DeleteMapping("/delete-one")
+    public Mono<ResponseEntity<Envelope>> DeleteBeneficiary(@RequestBody BeneficiaryRequests.DeleteBeneficiary beneficiary, @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch) {
+        BeneficiaryCommands command = ToCommand.toDeleteBeneficiary(beneficiary.beneficiaryId(), ifMatch.toLong());
+        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", serviceResult.getValue().get());
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
+
+    @PostMapping("/whitelist/add-one")
+    public Mono<ResponseEntity<Envelope>> AddItemBeneficiaryWhiteList(@RequestBody BeneficiaryRequests.AddItemBeneficiaryWhiteListRequest ip, @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch) {
+        BeneficiaryCommands command = ToCommand.toAddItemBeneficiaryWhiteList(ip.beneficiaryId(), ip, ifMatch.toLong());
+        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", serviceResult.getValue().get());
+                envelope.setStatusCode(HttpStatus.CREATED.value());
+                return ResponseEntity.ok(envelope);
+
+            } else {
+                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
+            }
+        });
+    }
+
+    @DeleteMapping("/whitelist/delete-one")
+    public Mono<ResponseEntity<Envelope>> DeleteItemFromBeneficiaryWhiteList(@RequestBody BeneficiaryRequests.DeleteItemFromBeneficiaryWhiteListRequest beneficiary, @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch) {
+        BeneficiaryCommands command = ToCommand.toDeleteItemFromBeneficiaryWhiteList(beneficiary.beneficiaryId(),
+                beneficiary.whiteListId() , ifMatch.toLong());
+        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
+        return result.map(serviceResult -> {
+            if (serviceResult.isSuccess()) {
                 Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
                 envelope.setStatusCode(HttpStatus.CREATED.value());
                 return ResponseEntity.ok(envelope);
@@ -90,69 +141,8 @@ public class BeneficiaryController {
     }
 
     @PostMapping("/broker-relation/add")
-    public Mono<ResponseEntity<Envelope>> AssignBrokersToSupplier(@RequestBody BeneficiaryRequests.assignBrokersToSupplier assign
-            , @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
-    ) {
+    public Mono<ResponseEntity<Envelope>> AssignBrokersToSupplier(@RequestBody BeneficiaryRequests.assignBrokersToSupplier assign, @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch) {
         BeneficiaryCommands command = ToCommand.toAssignBrokersToSupplier(assign.beneficiaryId(), assign,
-                ifMatch.toLong());
-        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
-        return result.map(serviceResult -> {
-            if (serviceResult.isSuccess()) {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
-                envelope.setStatusCode(HttpStatus.CREATED.value());
-                return ResponseEntity.ok(envelope);
-
-            } else {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
-            }
-        });
-    }
-
-    @PostMapping("/whitelist/add-one")
-    public Mono<ResponseEntity<Envelope>> AddItemBeneficiaryWhiteList(@RequestBody BeneficiaryRequests.AddItemBeneficiaryWhiteListRequest ip
-            , @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
-    ) {
-        BeneficiaryCommands command = ToCommand.toAddItemBeneficiaryWhiteList(ip.beneficiaryId(), ip, ifMatch.toLong());
-        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
-        return result.map(serviceResult -> {
-            if (serviceResult.isSuccess()) {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
-                envelope.setStatusCode(HttpStatus.CREATED.value());
-                return ResponseEntity.ok(envelope);
-
-            } else {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
-            }
-        });
-    }
-
-    @DeleteMapping("/delete-one")
-    public Mono<ResponseEntity<Envelope>> DeleteBeneficiary(@RequestBody BeneficiaryRequests.DeleteBeneficiary beneficiary
-            , @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
-    ) {
-        BeneficiaryCommands command = ToCommand.toDeleteBeneficiary(beneficiary.beneficiaryId(), ifMatch.toLong());
-        Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
-        return result.map(serviceResult -> {
-            if (serviceResult.isSuccess()) {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.CREATED, "Success", result);
-                envelope.setStatusCode(HttpStatus.CREATED.value());
-                return ResponseEntity.ok(envelope);
-
-            } else {
-                Envelope envelope = Envelope.createEnvelope(HttpStatus.BAD_REQUEST, "Failure", null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(envelope);
-            }
-        });
-    }
-
-    @DeleteMapping("/whitelist/delete-one")
-    public Mono<ResponseEntity<Envelope>> DeleteItemFromBeneficiaryWhiteList(
-            @RequestBody BeneficiaryRequests.DeleteItemFromBeneficiaryWhiteListReqest beneficiary
-            , @RequestHeader(name = HttpHeaders.IF_MATCH) @NotNull ETag ifMatch
-    ) {
-        BeneficiaryCommands command = ToCommand.toDeleteItemFromBeneficiaryWhiteList(beneficiary.beneficiaryId(),
                 ifMatch.toLong());
         Mono<ServiceResult<String>> result = _dispatcher.dispatch(command);
         return result.map(serviceResult -> {

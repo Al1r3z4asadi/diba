@@ -44,13 +44,13 @@ public interface BeneficiaryEvents extends IEvent  {
             UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-    record ItemBeneficiaryAddedtoWhiteList(UUID id, String ip, IpType ipType,
+    record ItemBeneficiaryAddedToWhiteList(UUID id, String relationId , String ip, IpType ipType,
                                            UserMetadata metaData) implements BeneficiaryEvents {
     }
 
     record BeneficiaryRemoved(UUID id, UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-    record ItemWasRemovedFromWhiteList(UUID id, UUID whiteListId, UserMetadata metadata) implements BeneficiaryEvents {
+    record ItemWasRemovedFromWhiteList(UUID id, String whiteListId,String beneficiaryId ,  UserMetadata metadata) implements BeneficiaryEvents {
     }
 }

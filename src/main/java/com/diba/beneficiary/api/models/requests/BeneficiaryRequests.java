@@ -72,8 +72,9 @@ public final class BeneficiaryRequests {
     ) {
     }
 
-    public record DeleteItemFromBeneficiaryWhiteListReqest(
-            UUID beneficiaryId
+    public record DeleteItemFromBeneficiaryWhiteListRequest(
+            UUID beneficiaryId,
+            String whiteListId
     ) {
     }
 

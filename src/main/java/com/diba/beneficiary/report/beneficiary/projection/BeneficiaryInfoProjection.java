@@ -79,7 +79,7 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
     }
 
     @EventListener
-    void handleItemBeneficiaryAddedToWhiteList(MessageEnvelope<BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList> whiteList) {
+    void handleItemBeneficiaryAddedToWhiteList(MessageEnvelope<BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList> whiteList) {
         String streamId = getStreamId(whiteList);
         getAndUpdate(streamId, whiteList,
                 view -> view.addBeneficiaryToWhiteList(whiteList.data())
@@ -87,14 +87,22 @@ public class BeneficiaryInfoProjection extends Projection<BeneficiaryInfo, Strin
     }
 
     @EventListener
+    void handleItemWasRemovedFromWhiteList(MessageEnvelope<BeneficiaryEvents.ItemWasRemovedFromWhiteList> removeWhiteList) {
+        String streamId = getStreamId(removeWhiteList);
+        getAndUpdate(streamId, removeWhiteList,
+                view -> view.removeIP(removeWhiteList.data())
+        );
+    }
+
+    @EventListener
     void handleBeneficiaryRemoved(MessageEnvelope<BeneficiaryEvents.BeneficiaryRemoved> removed) {
         String streamId = getStreamId(removed);
-        deleteById(streamId,removed);
+        deleteById(streamId, removed);
     }
 
     private String getStreamId(MessageEnvelope<?> event) {
         int id_size = event.metadata().StreamId().length();
-        int uuidSize = UUID.randomUUID().toString().length() ;
+        int uuidSize = UUID.randomUUID().toString().length();
         return event.metadata().StreamId().substring(id_size - uuidSize);
     }
 }

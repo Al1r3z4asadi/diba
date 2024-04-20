@@ -49,7 +49,7 @@ public class BeneficiaryReportRepository extends ReportRepository<BeneficiaryInf
 
         return applyPagination(query, BeneficiaryInfo.class).flatMap(beneficiaryInfo -> Flux.fromIterable(beneficiaryInfo.getWhiteLists())
                 .map(ipWhiteList -> new BeneficiaryWhiteListReportDto(
-                        beneficiaryInfo.getId(),
+                        ipWhiteList.getRelationId(),
                         ipWhiteList.getIpAddress(),
                         ipWhiteList.getIpType()
                 ))

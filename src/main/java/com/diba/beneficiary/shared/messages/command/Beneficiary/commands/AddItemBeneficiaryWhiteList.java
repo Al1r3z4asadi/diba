@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class AddItemBeneficiaryWhiteList extends BeneficiaryCommands {
+    private String relationId ;
     private String beneficiaryId;
     private String ip;
     private IpType ipType;

@@ -77,8 +77,10 @@ public class ToCommand {
         return command;
     }
 
-    public static BeneficiaryCommands toDeleteItemFromBeneficiaryWhiteList(UUID beneficairyId, Long version) {
-        BeneficiaryCommands command = new DeleteItemFromBeneficiaryWhiteList(beneficairyId.toString(), version);
+    public static BeneficiaryCommands toDeleteItemFromBeneficiaryWhiteList(UUID beneficiaryId,
+                                                                           String whiteListId,
+                                                                           Long version) {
+        BeneficiaryCommands command = new DeleteItemFromBeneficiaryWhiteList(beneficiaryId.toString() , whiteListId, version);
         return command;
     }
 

@@ -5,14 +5,16 @@ import lombok.Data;
 @Data
 public class DeleteItemFromBeneficiaryWhiteList extends BeneficiaryCommands {
     private String beneficiaryId;
+    private String whiteListId;
     private long version;
 
     public DeleteItemFromBeneficiaryWhiteList() {
 
     }
 
-    public DeleteItemFromBeneficiaryWhiteList(String beneficiaryId, long version) {
+    public DeleteItemFromBeneficiaryWhiteList(String beneficiaryId, String whiteListId, long version) {
         this.beneficiaryId = beneficiaryId;
+        this.whiteListId = whiteListId;
         this.version = version;
     }
 

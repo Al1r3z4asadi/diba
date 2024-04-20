@@ -4,6 +4,7 @@ import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.exception.ErrorCodes;
 import com.diba.beneficiary.core.http.ETag;
 import com.diba.beneficiary.core.models.Beneficiary.Beneficiary;
+import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
 import com.diba.beneficiary.core.models.Beneficiary.enums.BeneficiaryStatus;
 import com.diba.beneficiary.infrastructure.esdb.IEventStoreDBRepository;
 import com.diba.beneficiary.infrastructure.mongo.BeneficiaryLocalRepository;
@@ -102,36 +103,6 @@ public class BeneficiaryDomainService {
         return future;
     }
 
-    public CompletableFuture<ServiceResult<String>> assignBroker(AssignBrokersToSupplier assign) throws BeneficiaryException {
-        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
-        checkIfExistInLocalDB(assign.getBeneficiaryId().toString());
-        CompletableFuture.runAsync(() -> {
-            try {
-                _esdbRepo.getAndUpdate(current -> current.AssignBrokers(assign),
-                        UUID.fromString(assign.getBeneficiaryId()), assign.getExpectedVersion());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            future.complete(ServiceResult.success(assign.getBeneficiaryId()));
-        });
-        return future;
-    }
-
-    public CompletableFuture<ServiceResult<String>> addIp(AddItemBeneficiaryWhiteList addIp) throws BeneficiaryException {
-        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
-        checkIfExistInLocalDB(addIp.getBeneficiaryId().toString());
-        CompletableFuture.runAsync(() -> {
-            try {
-                _esdbRepo.getAndUpdate(current -> current.AddItemBeneficairyWhiteList(addIp),
-                        UUID.fromString(addIp.getBeneficiaryId()), addIp.getExpectedVersion());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            future.complete(ServiceResult.success(addIp.getBeneficiaryId()));
-        });
-        return future;
-    }
-
     public CompletableFuture<ServiceResult<String>> deleteBeneficiary(DeleteBeneficiary delete) throws BeneficiaryException {
         CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
         var bene = checkIfExistInLocalDB(delete.getBeneficiaryId().toString());
@@ -149,9 +120,28 @@ public class BeneficiaryDomainService {
         return future;
     }
 
+    public CompletableFuture<ServiceResult<String>> addIp(AddItemBeneficiaryWhiteList addIp) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        checkIfExistInLocalDB(addIp.getBeneficiaryId().toString());
+
+        CompletableFuture.runAsync(() -> {
+            String relationId = UUID.randomUUID().toString();
+            addIp.setRelationId(relationId);
+            try {
+                IpWhiteList.validateIP(addIp.getIp());
+                _esdbRepo.getAndUpdate(current -> current.AddItemBeneficairyWhiteList(addIp),
+                        UUID.fromString(addIp.getBeneficiaryId()), addIp.getExpectedVersion());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(relationId));
+        });
+        return future;
+    }
+
     public CompletableFuture<ServiceResult<String>> deleteItemFromBeneficiaryWhiteList(DeleteItemFromBeneficiaryWhiteList c) throws BeneficiaryException {
         CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
-        var bene = checkIfExistInLocalDB(c.getBeneficiaryId().toString());
+        checkIfExistInLocalDB(c.getBeneficiaryId().toString());
         CompletableFuture.runAsync(() -> {
             try {
                 _esdbRepo.getAndUpdate(current -> current.removeIP(c), UUID.fromString(c.getBeneficiaryId()),
@@ -161,6 +151,21 @@ public class BeneficiaryDomainService {
             }
             future.complete(ServiceResult.success(c.getBeneficiaryId()));
 
+        });
+        return future;
+    }
+
+    public CompletableFuture<ServiceResult<String>> assignBroker(AssignBrokersToSupplier assign) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        checkIfExistInLocalDB(assign.getBeneficiaryId().toString());
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(current -> current.AssignBrokers(assign),
+                        UUID.fromString(assign.getBeneficiaryId()), assign.getExpectedVersion());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(assign.getBeneficiaryId()));
         });
         return future;
     }

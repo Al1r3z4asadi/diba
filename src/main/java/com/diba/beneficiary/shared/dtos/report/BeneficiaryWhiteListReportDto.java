@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BeneficiaryWhiteListReportDto {
-    private String beneficiaryId ;
+    private String relationId ;
     private String validIp ;
     private IpType ipType ;
 }

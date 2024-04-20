@@ -1,6 +1,5 @@
 package com.diba.beneficiary.report.beneficiary.views;
 
-import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.BeneficiaryProduct;
 import com.diba.beneficiary.core.models.Beneficiary.IpWhiteList;
 import com.diba.beneficiary.core.models.Beneficiary.SupplierBroker;
@@ -120,15 +119,17 @@ public class BeneficiaryInfo implements VersionedView {
         return this;
     }
 
-    public BeneficiaryInfo addBeneficiaryToWhiteList(BeneficiaryEvents.ItemBeneficiaryAddedtoWhiteList whiteList)  {
-        this.whiteLists.add(IpWhiteList.createIPWhiteList(whiteList.ip() , whiteList.ipType()));
-        return this ;
-    }
-    public BeneficiaryInfo removeBeneficiary(BeneficiaryEvents.BeneficiaryRemoved remove){
-        this.status = BeneficiaryStatus.INACTIVE ;
-        return  this;
+    public BeneficiaryInfo addBeneficiaryToWhiteList(BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList whiteList) {
+        this.whiteLists.add(new IpWhiteList(whiteList.relationId(), whiteList.ip() , whiteList.ipType()));
+        return this;
     }
 
+    public BeneficiaryInfo removeIP(BeneficiaryEvents.ItemWasRemovedFromWhiteList data) {
+        this.whiteLists = whiteLists.stream()
+                .filter(whiteList -> !whiteList.getRelationId().equals(data.whiteListId()))
+                .collect(Collectors.toList());
+        return this;
+    }
 
     @Override
     public long getLastProcessedPosition() {
