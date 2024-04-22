@@ -184,6 +184,21 @@ public class BeneficiaryDomainService {
         });
         return future;
     }
+    public CompletableFuture<ServiceResult<String>> processBeneficiary(BeginProcess process) throws BeneficiaryException {
+        CompletableFuture<ServiceResult<String>> future = new CompletableFuture<>();
+        checkIfExistInLocalDB(process.getBeneficiaryId().toString());
+        String relationId = UUID.randomUUID().toString();
+        CompletableFuture.runAsync(() -> {
+            try {
+                _esdbRepo.getAndUpdate(current -> current.process(process , relationId),
+                        UUID.fromString(process.getBeneficiaryId()), process.getVersion());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            future.complete(ServiceResult.success(relationId));
+        });
+        return future;
+    }
 
     //private
     private void checkIfNotExistInLocalDB(String bussinesCode) throws BeneficiaryException {

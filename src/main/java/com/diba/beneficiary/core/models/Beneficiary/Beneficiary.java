@@ -38,7 +38,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     private BeneficiaryStatus status;
     private BeneficiaryStep step;
     private List<IpWhiteList> whiteLists = new ArrayList<>();
-    private List<SupplierBroker> brokers;
+    private List<SupplierBroker> brokers = new ArrayList<>();
     private List<SupplierBroker> suppliers;
     private List<BeneficiaryProduct> products;
 
@@ -96,11 +96,11 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         List<BrokerDto> brokerIds = new ArrayList<>();
         for (var item : assign.getIds()) {
             brokerIds.add(new BrokerDto(UUID.randomUUID().toString(),
-                    item.getBeneficiaryId().toString() ,item.getBrokerId()));
+                    item.getBeneficiaryId().toString(), item.getBrokerId()));
         }
         try {
             enqueue(new BeneficiaryEvents.BrokersWasAssignedToSupplier(
-                    UUID.randomUUID(),brokerIds ,   metadata));
+                    UUID.randomUUID(), brokerIds, metadata));
         } catch (Exception e) {
             // log exception if not sth happend
         }
@@ -111,7 +111,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         UserMetadata metadata = new UserMetadata(addIp.getId().toString(), addIp.getBeneficiaryId());
         try {
             enqueue(new BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList(
-                    UUID.randomUUID(),addIp.getRelationId() ,addIp.getIp(), addIp.getIpType(), metadata));
+                    UUID.randomUUID(), addIp.getRelationId(), addIp.getIp(), addIp.getIpType(), metadata));
         } catch (Exception e) {
             // log exception if not sth happend
         }
@@ -131,21 +131,32 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         UserMetadata metadata = new UserMetadata(c.getId().toString(), c.getBeneficiaryId());
         try {
             enqueue(new BeneficiaryEvents.ItemWasRemovedFromWhiteList(
-                    UUID.randomUUID(), c.getWhiteListId() , c.getBeneficiaryId(), metadata));
+                    UUID.randomUUID(), c.getWhiteListId(), c.getBeneficiaryId(), metadata));
         } catch (Exception e) {
             // log exception if not sth happend
         }
     }
+
     public void addProduct(AddProductToBeneficiary addProduct) {
         UserMetadata metadata = new UserMetadata(addProduct.getId().toString(), addProduct.getBeneficiaryId());
         try {
             enqueue(new BeneficiaryEvents.ProductWasAddedToBeneficiary(UUID.randomUUID(),
-                    addProduct.getProductId(), addProduct.getBeneficiaryId() ,addProduct.getInsertionDate() ,
-                    addProduct.getAdmissionDate() ,metadata));
+                    addProduct.getProductId(), addProduct.getBeneficiaryId(), addProduct.getInsertionDate(),
+                    addProduct.getAdmissionDate(), metadata));
         } catch (Exception e) {
             // log exception if not sth happend
-        }    }
+        }
+    }
 
+    public void process(BeginProcess process, String relationId) {
+        UserMetadata metadata = new UserMetadata(process.getId().toString(), process.getBeneficiaryId());
+        try {
+            enqueue(new BeneficiaryEvents.BeneficiaryProcessed(UUID.randomUUID(),
+                    process.getBeneficiaryId(), process.getBrokerId(), relationId, metadata));
+        } catch (Exception e) {
+            // log exception if not sth happend
+        }
+    }
 
     private Beneficiary(UUID id, String businessCode, String beneficiaryNameEn,
                         String beneficiaryName, List<BeneficiaryRole> beneficiaryRoles,
@@ -218,11 +229,14 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
         } else if (beneficiaryEvents instanceof BeneficiaryEvents.BeneficiaryRemoved) {
             apply((BeneficiaryEvents.BeneficiaryRemoved) beneficiaryEvents);
 
-        } else if((beneficiaryEvents instanceof  BeneficiaryEvents.ItemWasRemovedFromWhiteList)){
+        } else if ((beneficiaryEvents instanceof BeneficiaryEvents.ItemWasRemovedFromWhiteList)) {
             apply((BeneficiaryEvents.ItemWasRemovedFromWhiteList) beneficiaryEvents);
 
-        } else if(beneficiaryEvents instanceof BeneficiaryEvents.ProductWasAddedToBeneficiary){
+        } else if (beneficiaryEvents instanceof BeneficiaryEvents.ProductWasAddedToBeneficiary) {
             apply((BeneficiaryEvents.ProductWasAddedToBeneficiary) beneficiaryEvents);
+
+        } else if(beneficiaryEvents instanceof  BeneficiaryEvents.BeneficiaryProcessed){
+            apply((BeneficiaryEvents.BeneficiaryProcessed) beneficiaryEvents);
         }
         else {
             throw new BeneficiaryException(ErrorCodes.UNSUPPORTED_EVENT.getMessage() + beneficiaryEvents.getClass().getSimpleName(),
@@ -232,7 +246,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     }
 
     private void apply(BeneficiaryEvents.ProductWasAddedToBeneficiary event) {
-        this.products.add(new BeneficiaryProduct(event.beneficairyId() , event.productId() , event.insertionDate() , event.admissionDate()));
+        this.products.add(new BeneficiaryProduct(event.beneficiaryId(), event.productId(), event.insertionDate(), event.admissionDate()));
     }
 
     public static Beneficiary empty() {
@@ -277,7 +291,7 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
     }
 
     private void apply(BeneficiaryEvents.ItemBeneficiaryAddedToWhiteList ItemAddedToWhiteList) throws BeneficiaryException {
-        this.whiteLists.add(new IpWhiteList(ItemAddedToWhiteList.relationId() , ItemAddedToWhiteList.ip() , ItemAddedToWhiteList.ipType()));
+        this.whiteLists.add(new IpWhiteList(ItemAddedToWhiteList.relationId(), ItemAddedToWhiteList.ip(), ItemAddedToWhiteList.ipType()));
     }
 
     private void apply(BeneficiaryEvents.BeneficiaryRemoved removed) {
@@ -289,6 +303,12 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                 .filter(whiteList -> whiteList.getRelationId() != ItemRemovedWhiteList.whiteListId())
                 .collect(Collectors.toList());
     }
+
+    private void apply(BeneficiaryEvents.BeneficiaryProcessed processed){
+        this.step = BeneficiaryStep.AwaitingCodeAllocation;
+        this.brokers.add(new SupplierBroker(processed.beneficiaryId() , processed.brokerId()));
+    }
+
 
     public static void validateBusinessCode(String BusinessCode) throws BeneficiaryException {
         if (BusinessCode.length() != 2) {
@@ -303,6 +323,6 @@ public class Beneficiary extends AbstractAggregate<BeneficiaryEvents, UUID> {
                     , ErrorCodes.STATUS_CAN_NOT_CHANGE.getCode());
         }
     }
-
-
 }
+
+

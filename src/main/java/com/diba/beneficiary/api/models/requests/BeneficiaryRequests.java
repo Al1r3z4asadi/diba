@@ -78,14 +78,20 @@ public final class BeneficiaryRequests {
     ) {
     }
 
-    public  record  addproductToBeneficiary(
-            UUID beneficiaryId ,
-            UUID productId ,
-            LocalDateTime insertionDate ,
+    public record addproductToBeneficiary(
+            UUID beneficiaryId,
+            UUID productId,
+            LocalDateTime insertionDate,
             LocalDateTime admissionDate
 
-    ){
+    ) {
 
+    }
+
+    public record beginningProcess(
+            UUID beneficiaryId,
+            UUID brokerId
+    ) {
     }
 
 }

@@ -4,7 +4,6 @@ import com.diba.beneficiary.api.models.requests.BeneficiaryRequests;
 import com.diba.beneficiary.core.exception.BeneficiaryException;
 import com.diba.beneficiary.core.models.Beneficiary.enums.*;
 import com.diba.beneficiary.shared.messages.command.Beneficiary.commands.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -94,6 +93,12 @@ public class ToCommand {
         BeneficiaryCommands command = new AddProductToBeneficiary(beneficiaryId.toString()
                 ,productId.toString() , insertionDate , admissionDate, version);
         return command;
+    }
+
+    public static BeneficiaryCommands toBeginProcess(UUID beneficiary, UUID productId, Long version) {
+        BeneficiaryCommands command = new BeginProcess(beneficiary.toString() ,
+                productId.toString() , version);
+        return command ;
     }
 
     private static BeneficiaryRole toEnum(Integer value) {

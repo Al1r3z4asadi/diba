@@ -55,8 +55,12 @@ public interface BeneficiaryEvents extends IEvent {
                                        UserMetadata metadata) implements BeneficiaryEvents {
     }
 
-    record ProductWasAddedToBeneficiary(UUID id, String productId, String beneficairyId,
+    record ProductWasAddedToBeneficiary(UUID id, String productId, String beneficiaryId,
                                         LocalDateTime insertionDate , LocalDateTime admissionDate
                                         ,UserMetadata metadata) implements BeneficiaryEvents {
+    }
+
+    record BeneficiaryProcessed(UUID id, String beneficiaryId, String brokerId , String relationId
+            ,UserMetadata metadata) implements BeneficiaryEvents {
     }
 }
